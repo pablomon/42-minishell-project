@@ -1,3 +1,3 @@
-[submodule "minishell"]
-	path = minishell
-	url = https://github.com/pablomon/minishell
+[submodule "libft"]
+	path = libft
+	url = https://github.com/pablomon/libft
