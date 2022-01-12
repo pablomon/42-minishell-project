@@ -1,0 +1,8 @@
+4
+-> entry new_process
+--- av[1] in new_process is: ls
+--- file in find_path is: /bin/ls
+--- --- ---
+outfile2
+param->dir_cmd in redirection is: outfile2
+param->aux in redirection is: ls > outfile2

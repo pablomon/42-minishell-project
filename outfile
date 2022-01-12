@@ -1,0 +1,8 @@
+4
+-> entry new_process
+--- av[1] in new_process is: ls
+--- file in find_path is: /bin/ls
+--- --- ---
+-rw-r--r--  1 lvintila  2019  101 Jan 10 18:09 outfile
+param->dir_cmd in redirection is: outfile
+param->aux in redirection is: ls -la > outfile
