@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvintila <lvintila@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvintila <lvintila@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/08 20:54:21 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/09 13:48:41 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:18:21 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*find_path(char *cmd, char **envp)
 		if (access(str, F_OK) == 0)
 			return (str);
 	}
-	//check_str(str, cmd);
+	check_str(str, cmd);
 	return (cmd);
 }
 

@@ -1,3 +1,2 @@
-echo hola
-bash file
-echo adios
+ls -la
+echo FINISHED

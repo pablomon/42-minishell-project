@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: lvintila <lvintila@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/12 10:14:54 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/12 17:27:45 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ ANSI Color codes
 
 typedef struct  s_param
 {
-	char	*script;
 //  char    **comandos;
     char    *token;
     char    *line;
@@ -134,11 +133,11 @@ char        *rl_gets();
 char        *find_path(char *cmd, char **envp);
 void        check_str(char *str, char *cmd);
 void        free_arr(char **arr);
-int     	redirection(t_param *param, char **env);
+int     	redirection(t_command **commands, char **env);
 void        redirect(char *buff);
 int     	exec_cmds(t_param *param, char **cmds, int exec_count, char **env);
 int         found_char(char *str, char c);
-int         check_redir(t_param *param, char **env);
+int         check_redir(t_command *commands, char **env);
 int         found_op(char *str, char *op);
 int         re_direction_and_pipe(char **args, char **env);
 char        **split_line(char *line);

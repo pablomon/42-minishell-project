@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/12 20:38:47 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/13 21:11:03 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,56 +17,36 @@ void 	init_params(t_param *param)
 	param->line			= NULL;
 	param->token		= NULL;
 	param->exec_count	= 0;
-	param->dir			= 0;
-	param->dir_cmd		= NULL;
+    param->dir			= 0;
+    param->dir_cmd		= NULL;
 	param->aux			= NULL;
 	param->fd			= 0;
 	param->indir		= 0;
 }
 
-int	filetest(const char *path)
-{
-	if (access(path, F_OK) == -1)
-	{
-		printf("errno %d\n", errno);
-		exit(0);
-	}
-}
-int isdir(const char *path) {
-   struct stat statbuf;
-   if (stat(path, &statbuf) != 0)
-       return 0;
-   return S_ISDIR(statbuf.st_mode);
+int	isdir(const char *path) {
+	struct stat statbuf;
+	if (stat(path, &statbuf) != 0)
+		return 0;
+	return S_ISDIR(statbuf.st_mode);
 }
 
-void	myshell_nointerac(char *script, char **env)
+char	*read_script(char *script)
 {
 	int		fd;
+	char	*tmp;
 	char	*total;
 	char	*line;
-	char	*tmp;
 
-	if (isdir(script))
+	if ((fd = open(script, O_RDONLY)) < 0)
 	{
-		printf("%s: is a directory \n", script);
-		exit(126);
+		perror("error: ");
+		exit (fd);	// TODO comprobar que error devuelve bash en este caso
 	}
-	if (access(script, F_OK) == -1)
-	{
-		printf("%s: No such file or dir\n", script);
-		exit(127);
-	}
-
-	// TODO comprobar permisos
-
-	fd = open(script, O_RDONLY);
-	if (fd < 0)
-		exit (fd);
-	total = ft_strdup("");
 	if (get_next_line(fd, &line))
 	{
 		tmp = total;
-		total = ft_strjoin(total, line);
+		total = ft_strjoin(ft_strdup(""), line);
 		free(tmp);
 		free(line);
 	}
@@ -76,12 +56,29 @@ void	myshell_nointerac(char *script, char **env)
 		total = ft_strjoin(total, "\n");
 		free(tmp);
 		tmp = total;
-		total = ft_strjoin(total, line);
+		total = ft_strjoin(tmp, line);
 		free(tmp);
 		free(line);
 	}
-	printf("file content:\n%s\n", total);
+	return total;
+}
 
+void	myshell_nointerac(char *script, char **env)
+{
+	int		fd;
+	char	*content;
+
+	// if (isdir(script))
+	// {
+	// 	printf("%s: is a directory \n", script);
+	// 	exit(126);
+	// }
+
+	// TODO comprobar permisos
+
+	content = read_script(script);
+	printf("file content:\n%s\n", content);
+	free(content);
 	exit(1);
 }
 
@@ -91,20 +88,19 @@ int main(int ac, char *av[], char **env)
 	int execution_coun = 1;
 	int status = 0;
 
-	param = malloc(sizeof(t_param));
 	if (ac > 2)
 	{
 		write(2, "Error: wrong number of arguments\n", 33);
 		write(2, "Usage: './minishell' or './minishell file'\n", 43);
 		return (1);
 	}
-	param->script = NULL;
 	if (ac == 2)
 	{
 		printf("Non interactive mode\n");
 		// if (isatty(STDIN_FILENO) == 0) {	}
 		myshell_nointerac(av[1], env);
 	}
+	param = malloc(sizeof(t_param));
 	printf("Entering interactive mode\n");
 //	param->dir_cmd = NULL;
 //	param->line = NULL;

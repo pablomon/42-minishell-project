@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/01/11 17:38:40 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/10 20:38:13 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
-#define MAX_COMMANDS 1000
 
 void	print_cmd(t_command *cmd)
 {
@@ -31,20 +30,13 @@ void	print_cmd(t_command *cmd)
 	printf("heredoc word	= %s\n", cmd->hdocword);
 }
 
-t_command	*new_command(int max_args)
+t_command	*new_command()
 {
-	t_command	*cmd;
-	int			i;
+	t_command *cmd;
 
 	cmd = (t_command*)malloc(sizeof(t_command));
 	cmd->argc		= 0;
-	cmd->argv		= (char**)(malloc(sizeof(char*) * (max_args + 1)));
-	i = 0;
-	while (i < max_args + 1)
-	{
-		cmd->argv[i] = NULL;
-		i++;
-	}
+	cmd->argv		= (char**)(malloc(sizeof(char**)));
 	cmd->name		= NULL;
 	cmd->filein		= NULL;
 	cmd->fileout	= NULL;
@@ -120,6 +112,7 @@ int	get_command(t_token *tokens, t_command *cmd, int *pos)
 	}
 	printf("Command completed ( end ):\n");
 	print_cmd(cmd);
+	cmd->argv[cmd->argc + 1] = NULL;
 	return (0);
 }
 
@@ -128,27 +121,16 @@ t_command	**parser(t_token *tokens)
 	t_command	**cmd_lst;
 	int			pos;
 	int			i;
-	int			max_args;
 
 	printf("\nPARSER----\n");
-	cmd_lst = (t_command**)malloc(sizeof(t_command*) * MAX_COMMANDS);
-	i = 0;
-	while (i < MAX_COMMANDS)
-	{
-		cmd_lst[i] = NULL;
-		i++;
-	}
+	cmd_lst = (t_command**)malloc(sizeof(t_command*) * 100);
 	pos = 0;
-	max_args = 0;
-	while (tokens[max_args].type != TT_EOF)
-		max_args++;
 	i = 0;
-	printf("max args = %d\n", max_args);
-	cmd_lst[i] = new_command(max_args);
+	cmd_lst[i] = new_command();
 	while (get_command(tokens, cmd_lst[i], &pos))
 	{
 		i++;
-		cmd_lst[i] = new_command(max_args);
+		cmd_lst[i] = new_command();
 	}
 	return cmd_lst;
 }
