@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   my_newprocess.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvintila <lvintila@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 17:58:30 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/13 19:52:07 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/01/16 09:57:06 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * Return: void
  **/
 
-int new_process(t_command **commands, int exec_counter, char **env)
+int new_process(t_command *command, int exec_counter, char **env)
 {
 	char	*path = NULL;
 	char	*file = NULL;
@@ -30,15 +30,15 @@ int new_process(t_command **commands, int exec_counter, char **env)
 
 	status = 0;
 	//printf("=== === ===\n");
-	if (access(*commands[0]->argv, F_OK) == 0)
+	if (access(*command->argv, F_OK) == 0)
 	{
-		file = *commands[0]->argv;
+		file = *command->argv;
 /* 		printf("-1- commands[0]->argv[0] in new_process is: %s\n", commands[0]->argv[0]);
 		printf("-1- file in access is: %s\n", file); */
 	}
 	else
 	{
-		(file = find_path(*commands[0]->argv, env));
+		(file = find_path(*command->argv, env));
 /* 		printf("--- commands[0]->argv[0] in new_process is: %s\n", commands[0]->argv[0]);
 		printf("--- file in find_path is: %s\n", file); */
 	}
@@ -47,9 +47,9 @@ int new_process(t_command **commands, int exec_counter, char **env)
 		child_pid = fork();
 		if (child_pid == 0)
 		{
-			if ((execve(file, commands[0]->argv, env)) == -1)
+			if ((execve(file, command->argv, env)) == -1)
 			{
-				check_str(file, *commands[0]->argv);
+				check_str(file, *command->argv);
 			/* 	msg_err = *commands[0]->argv;
 				perror(msg_err);
 				free(file);
@@ -67,4 +67,3 @@ int new_process(t_command **commands, int exec_counter, char **env)
  	//printf("--- --- ---\n");
 	return (0);
 }
-

@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/01/11 17:38:40 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/15 11:22:21 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	print_cmd(t_command *cmd)
 	printf("out	= %s\n", cmd->fileout);
 	printf("append	= %d\n", cmd->append);
 	printf("heredoc word	= %s\n", cmd->hdocword);
+	printf("is piped = %d\n", cmd->piped);
 }
 
 t_command	*new_command(int max_args)
@@ -51,6 +52,7 @@ t_command	*new_command(int max_args)
 	cmd->hdocword	= NULL;
 	cmd->argc		= 0;
 	cmd->append		= 0;
+	cmd->piped		= 0;
 	return (cmd);
 }
 
@@ -81,7 +83,7 @@ int	parse_redir(t_token tkn, t_token nxt, t_command *cmd, int *pos)
 
 int	get_command(t_token *tokens, t_command *cmd, int *pos)
 {
-	printf("\nParsing ( token %d )\n", *pos);
+	// printf("\nNew command ( token %d )\n", *pos);
 	t_token	tkn;
 	t_token nxt;
 
@@ -89,15 +91,16 @@ int	get_command(t_token *tokens, t_command *cmd, int *pos)
 	nxt = tokens[*pos + 1];
 	while (tkn.type != TT_EOF && tkn.type != TT_EMPTY)
 	{
-		if (tkn.op_type == OT_PIPE && cmd->name == NULL)
+		if (tkn.op_type == OT_PIPE || tkn.op_type == OT_NEWLINE)
 		{
-			printf("syntax error: unexpected token near `%s\'\n", tkn.cnt);
-			return (0);
-		}
-		if (tkn.op_type == OT_PIPE && cmd->name != NULL)
-		{
-			printf("Command completed ( pipe ):\n");
-			print_cmd(cmd);
+			if (cmd->name == NULL)
+			{
+				printf("syntax error: unexpected token near `%s\'\n", tkn.cnt);
+				return (0);
+			}
+			cmd->piped = tkn.op_type == OT_PIPE;
+			// printf("Command completed:\n");
+			// print_cmd(cmd);
 			*pos = *pos + 1;
 			return (1);
 		}
@@ -118,8 +121,8 @@ int	get_command(t_token *tokens, t_command *cmd, int *pos)
 		tkn = tokens[*pos];
 		nxt = tokens[*pos + 1];
 	}
-	printf("Command completed ( end ):\n");
-	print_cmd(cmd);
+	// printf("Command completed ( end ):\n");
+	// print_cmd(cmd);
 	return (0);
 }
 
@@ -150,5 +153,15 @@ t_command	**parser(t_token *tokens)
 		i++;
 		cmd_lst[i] = new_command(max_args);
 	}
+	i = 0;
+	printf("\n--------------------\n");
+	while (cmd_lst[i] != NULL)
+	{
+		printf("Command %d:\n", i);
+		print_cmd(cmd_lst[i]);
+		printf("\n");
+		i++;
+	}
+	printf("--------------------\n");
 	return cmd_lst;
 }

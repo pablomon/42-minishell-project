@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell_loop.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/13 20:41:11 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/16 10:29:30 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 	int		i;
 	int		read;
 	t_token     *tokens;
-    t_command   **cmd_lst;
+	t_command   **cmd_lst;
 
 	interactive = 1;
 	process_status = 0;
@@ -58,58 +58,19 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 			write(STDIN_FILENO, "($) ", 4);
 		read = get_cmd(param);
 
+		// exit condition
 		if (read == EOF)
 		{
 			free(param->line);
 			write(STDIN_FILENO, "\n", 1);
 			return (0);
 		}
-		else if (ft_strncmp(param->line, "exit\n", 4) == 0)
-		{
-			free(param->line);
-			//exit(1);
-			return (process_status);
-		}
-		else
-		{
-			if (ft_strncmp(param->line, "env\n", 3) == 0)
-				print_env(env);
-			else if (read == 0)
-			{
-				tokens = tokenizer(param->line);
-				i = 0;
-				while (i < 200)
-				{
-					if (tokens[i].type == TT_EOF)
-					{
-						printf("Token %d: EOF\n", i);
-						break;
-					}
-					else
-						printf("Token %d: '%s'\n", i, tokens[i].cnt);
-					i++;
-				}
-				cmd_lst = parser(tokens);
 
-				int i = 0;
-				while (cmd_lst[i] != NULL)
-				{
-					printf("Command %d:\n", i);
-					redirection(cmd_lst, env);
-					print_cmd(cmd_lst[i]);
-					printf("\n");
-					new_process(cmd_lst, exec_count, env);
-					i++;
-				}
-				if (cmd_lst[0]->fileout)
-				{
-					close(1);
-					dup(1);
-					dup(0);
-				}
-				dup2(1, 0);
-			}
+		if (read == 0)
+		{
+			executer(param->line, env);
 		}
+		
 		exec_count++;
 	}
 //	close(param->fd);

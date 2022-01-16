@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvintila <lvintila@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/12 17:27:45 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/01/16 10:26:02 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 #define OT_ORED 3
 #define OT_ORED2 4
 #define OT_HEREDOC 5
+#define OT_NEWLINE 6
 
 
 /* 
@@ -94,6 +95,7 @@ typedef struct s_command
 	char*	fileout;
 	int		append;
 	char*	hdocword;
+	int		piped;
 }			t_command;
 
 typedef struct s_token
@@ -118,7 +120,8 @@ void		print_cmd(t_command *cmd);
 /* Shell functions*/
 
 int         myshell_loop(t_param *param, char **av, int execution_counter, char **env);
-int         new_process(t_command **commands, int execution_counter, char **env);
+int         new_process(t_command *commands, int execution_counter, char **env);
+void		executer(char *doc, char **env);
 
 /* diffrent utility functions */
 void        print_env(char **env);

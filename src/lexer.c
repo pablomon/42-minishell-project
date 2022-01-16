@@ -25,6 +25,8 @@ int	delimit_tkn(int tkn_pos, char *cnt, t_token *tkn)
 		tkn->op_type = OT_HEREDOC;
 	if (tkn->cnt[0] == '|')
 		tkn->op_type = OT_PIPE;
+	if (tkn->cnt[0] == '\n')
+		tkn->op_type = OT_NEWLINE;
 	return (1);
 }
 
@@ -224,12 +226,15 @@ t_token	*tokenizer(char *input)
 		i++;
 	}
 	i = 0;
-	printf("\nShowing obtained tokens..");
+	printf("\nShowing obtained tokens..\n");
 	while (1)
 	{
-		printf("token %d: '%s'\n", i, tokens[i].cnt);
 		if (tokens[i].type == TT_EOF)
+		{
+			printf("token %d: '%s' EOF\n", i, tokens[i].cnt);
 			break;
+		}
+		printf("token %d: '%s'\n", i, tokens[i].cnt);
 		i++;
 	}
 	return tokens;

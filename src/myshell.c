@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/13 21:11:03 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/16 10:43:23 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@ char	*read_script(char *script)
 		perror("error: ");
 		exit (fd);	// TODO comprobar que error devuelve bash en este caso
 	}
+	ft_putstr("-----------");
 	if (get_next_line(fd, &line))
-	{
-		tmp = total;
-		total = ft_strjoin(ft_strdup(""), line);
+	{	
+		tmp = ft_strdup("");
+		total = ft_strjoin(tmp, line);
 		free(tmp);
 		free(line);
 	}
@@ -63,21 +64,72 @@ char	*read_script(char *script)
 	return total;
 }
 
+int	builtins(t_command *cmd, char **env)
+{
+	int	is_builtin;
+	char *n;
+	
+	n = cmd->name;
+	if (!ft_strcmp(n, "exit"))
+	{
+		exit(1);
+	}
+	else if (!ft_strcmp(n, "env"))
+	{
+		print_env(env);
+		return (1);
+	}
+	return (0);
+}
+
+void	executer(char *doc, char **env)
+{
+	t_token		*tokens;
+	t_command	**cmd_lst;
+	int			i;
+	int			exec_count;
+
+	tokens = tokenizer(doc);
+	cmd_lst = parser(tokens);
+
+	i = 0;
+	exec_count = 0;
+	while (cmd_lst[i] != NULL)
+	{
+		if (!builtins(cmd_lst[i], env))
+		{
+			redirection(cmd_lst, env);
+			new_process(cmd_lst[i], exec_count, env);
+			if (cmd_lst[i]->fileout)
+			{
+				close(1);
+				dup(1);
+				dup(0);
+			}
+			dup2(1, 0);
+		}
+		i++;
+	}
+}
+
 void	myshell_nointerac(char *script, char **env)
 {
 	int		fd;
 	char	*content;
 
-	// if (isdir(script))
-	// {
-	// 	printf("%s: is a directory \n", script);
-	// 	exit(126);
-	// }
+
+	if (isdir(script))
+	{
+		printf("%s: is a directory \n", script);
+		errno = 126;
+		exit(126);
+	}
 
 	// TODO comprobar permisos
 
 	content = read_script(script);
 	printf("file content:\n%s\n", content);
+	executer(content, env);
 	free(content);
 	exit(1);
 }
@@ -94,12 +146,12 @@ int main(int ac, char *av[], char **env)
 		write(2, "Usage: './minishell' or './minishell file'\n", 43);
 		return (1);
 	}
-	if (ac == 2)
+	else if (ac == 2)
 	{
 		printf("Non interactive mode\n");
-		// if (isatty(STDIN_FILENO) == 0) {	}
 		myshell_nointerac(av[1], env);
 	}
+
 	param = malloc(sizeof(t_param));
 	printf("Entering interactive mode\n");
 //	param->dir_cmd = NULL;
