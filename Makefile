@@ -22,7 +22,7 @@ INC			=	inc
 
 SOURCES_C	=	myshell.c myshell_loop.c  my_newprocess.c \
 				utils.c pipex.c redirection.c utility.c parser.c \
-				expander.c lexer.c noninteractive.c \
+				expander.c lexer.c noninteractive.c executer.c \
 
 SOURCES_G	=	get_next_line.c get_next_line_utils.c \
 

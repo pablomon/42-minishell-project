@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/16 10:43:23 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/16 12:53:56 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,59 +64,12 @@ char	*read_script(char *script)
 	return total;
 }
 
-int	builtins(t_command *cmd, char **env)
-{
-	int	is_builtin;
-	char *n;
-	
-	n = cmd->name;
-	if (!ft_strcmp(n, "exit"))
-	{
-		exit(1);
-	}
-	else if (!ft_strcmp(n, "env"))
-	{
-		print_env(env);
-		return (1);
-	}
-	return (0);
-}
-
-void	executer(char *doc, char **env)
-{
-	t_token		*tokens;
-	t_command	**cmd_lst;
-	int			i;
-	int			exec_count;
-
-	tokens = tokenizer(doc);
-	cmd_lst = parser(tokens);
-
-	i = 0;
-	exec_count = 0;
-	while (cmd_lst[i] != NULL)
-	{
-		if (!builtins(cmd_lst[i], env))
-		{
-			redirection(cmd_lst, env);
-			new_process(cmd_lst[i], exec_count, env);
-			if (cmd_lst[i]->fileout)
-			{
-				close(1);
-				dup(1);
-				dup(0);
-			}
-			dup2(1, 0);
-		}
-		i++;
-	}
-}
-
 void	myshell_nointerac(char *script, char **env)
 {
 	int		fd;
-	char	*content;
-
+	char	*doc;
+	t_token		*tokens;
+	t_command	**commands;
 
 	if (isdir(script))
 	{
@@ -127,11 +80,16 @@ void	myshell_nointerac(char *script, char **env)
 
 	// TODO comprobar permisos
 
-	content = read_script(script);
-	printf("file content:\n%s\n", content);
-	executer(content, env);
-	free(content);
-	exit(1);
+	doc = read_script(script);
+	printf("file content:\n%s\n", doc);
+
+	tokens = tokenizer(doc);
+	commands = parser(tokens);
+	executer(env, tokens, commands);
+	free(doc);
+	// free tokens
+	// free commands
+	exit(0);
 }
 
 int main(int ac, char *av[], char **env)

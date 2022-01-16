@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/16 10:29:30 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/16 12:55:34 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 	int		i;
 	int		read;
 	t_token     *tokens;
-	t_command   **cmd_lst;
+	t_command   **commands;
 
 	interactive = 1;
 	process_status = 0;
@@ -68,9 +68,13 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 
 		if (read == 0)
 		{
-			executer(param->line, env);
+			tokens = tokenizer(param->line);
+			commands = parser(tokens);
+			executer(env, tokens, commands);
+			free(param->line);
+			// free tokens
+			// free commands
 		}
-		
 		exec_count++;
 	}
 //	close(param->fd);

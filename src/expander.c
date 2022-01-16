@@ -31,6 +31,9 @@ int	expander(char **text, int pos)
 	if (str[1] == '?')
 	{
 		printf("TODO $? value\n");
+		char *serror = ft_itoa(errno);
+		*text = ft_strreplace(*text, serror, pos, ft_strlen(serror));
+		free(serror);
 		return(0);
 	}
 	if (!ft_isalpha(str[1]))
@@ -46,6 +49,8 @@ int	expander(char **text, int pos)
 	var_name[len] = 0;
 
 	printf("env var %s = ", var_name);
+
+	// TODO esto está bien así o tenemos que cogerlo del char **env?
 	if (getenv(var_name) != NULL)
 		printf("%s\n",getenv(var_name));
 	else

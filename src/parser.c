@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/01/15 11:22:21 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/16 12:35:12 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,6 @@ t_command	**parser(t_token *tokens)
 		cmd_lst[i] = new_command(max_args);
 	}
 	i = 0;
-	printf("\n--------------------\n");
 	while (cmd_lst[i] != NULL)
 	{
 		printf("Command %d:\n", i);
@@ -162,6 +161,5 @@ t_command	**parser(t_token *tokens)
 		printf("\n");
 		i++;
 	}
-	printf("--------------------\n");
 	return cmd_lst;
 }

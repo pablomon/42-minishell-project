@@ -69,6 +69,17 @@ it shall be used as part of that (operator) token. */
 				prev = c;
 				*pos = *pos + 1;
 				tkn_pos++;
+
+				// HERE DOCUMENT
+				if (c == '<' && prev == '<')
+				{
+					/* TODO start here doc
+					 start heredoc delimiter until newline
+					 add everything until it finds
+					 extactly delimiter + newline
+					 insert here doc and continue parsing
+					 */
+				}
 			}
 /* If the previous character was used as part of an operator
 and the current character cannot be used with the current characters to form an operator,
