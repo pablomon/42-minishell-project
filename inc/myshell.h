@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/16 12:54:27 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/20 22:09:08 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,16 @@ typedef struct s_token
 	int		delimited;
 }			t_token;
 
+/* Lexer */
 t_token *tokenizer(char *input);
 int	expander(char **text, int pos);
 int is_op(char c);
-// char *line;
 char	*ft_strreplace(char *str, char *insert, int pos, int len);
 
-/* parser */
+/* Heredoc */
+char *read_heredoc(char **str, int *pos);
 
+/* parser */
 t_command	**parser(t_token *tokens);
 void		print_cmd(t_command *cmd);
 

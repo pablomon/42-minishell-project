@@ -37,8 +37,9 @@ int	get_token(char **str, int *pos, t_token *token)
 	char		prev;
 	int			quoted;
 	int			tkn_pos;
-	char		cnt[1000]; // change to str append
+	char		cnt[1000]; //TODO change to str append
 	char		c;
+	static int	heredoc = 0;
 
 	prev = '\0';
 	quoted = NOQUOTE;
@@ -47,6 +48,14 @@ int	get_token(char **str, int *pos, t_token *token)
 	printf("source: %s\n", &((*str)[*pos]));
 	while (((*str)[*pos]) != 0) // TODO cambiar por EOF ???
 	{
+		if (heredoc)
+		{
+			token->type = TT_WORD;
+			token->cnt = read_heredoc(str, pos);
+			heredoc = 0;
+			return (1);
+		}
+		
 		c = ((*str)[*pos]);
 		if (token->delimited)
 		{
@@ -69,24 +78,16 @@ it shall be used as part of that (operator) token. */
 				prev = c;
 				*pos = *pos + 1;
 				tkn_pos++;
-
 				// HERE DOCUMENT
 				if (c == '<' && prev == '<')
-				{
-					/* TODO start here doc
-					 start heredoc delimiter until newline
-					 add everything until it finds
-					 extactly delimiter + newline
-					 insert here doc and continue parsing
-					 */
-				}
+					heredoc = 1;
 			}
 /* If the previous character was used as part of an operator
 and the current character cannot be used with the current characters to form an operator,
 the operator containing the previous character shall be delimited.*/
 			return (delimit_tkn(tkn_pos, cnt, token));
-			printf("..");
-			continue;
+			// printf("..");
+			// continue;
 		}
 /* If the current character is backslash, single-quote, or double-quote ( '\', '", or ' )' and it is not quoted,
 it shall affect quoting for subsequent characters up to the end of the quoted text.
