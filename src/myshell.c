@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/16 12:53:56 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/28 20:46:32 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void 	init_params(t_param *param)
 	param->aux			= NULL;
 	param->fd			= 0;
 	param->indir		= 0;
+	param->variables 	= NULL;
+	param->num_vars		= 0;
 }
 
 int	isdir(const char *path) {
@@ -45,7 +47,7 @@ char	*read_script(char *script)
 	}
 	ft_putstr("-----------");
 	if (get_next_line(fd, &line))
-	{	
+	{
 		tmp = ft_strdup("");
 		total = ft_strjoin(tmp, line);
 		free(tmp);

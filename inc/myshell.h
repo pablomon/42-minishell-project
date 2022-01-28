@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/20 22:09:08 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/28 20:46:31 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@
 #define OT_NEWLINE 6
 
 
-/* 
+/*
 ANSI Color codes
  */
 #define RED   		"\033[0;31m"
@@ -62,9 +62,15 @@ ANSI Color codes
 #define GREEN 		"\033[0;32m"
 #define BLUE 		"\033[0;34m"
 #define INVERT		"\033[0;7m"
-#define RESET  		"\e[0m" 
+#define RESET  		"\e[0m"
 #define BOLD		"\e[1m"
 #define ITALICS		"\e[3m"
+
+typedef struct  s_keyvalue
+{
+	char	*key;
+	char	*value;
+}				t_keyvalue;
 
 typedef struct  s_param
 {
@@ -84,6 +90,8 @@ typedef struct  s_param
     char    *aux;
     char    *cmds[32]; // char *args[32];
     int     fd;
+	t_keyvalue	**variables;
+	int		num_vars;
 }               t_param;
 
 typedef struct s_command
