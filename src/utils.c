@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvintila <lvintila@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/13 20:03:57 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/01/29 14:07:22 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
+
+t_keyval	*get_keyval(char *str)
+{
+	int	len;
+	int	len2;
+	t_keyval	*pair;
+
+	pair = (t_keyval*)(malloc(sizeof(t_keyval)));
+	len = 0;
+	while (str[len] != '=')
+		len++;
+	pair->key = ft_substr(str, 0, len);
+	pair->val = ft_strdup(&str[len + 1]);
+	return pair;
+}
 
 void	check_str(char *str, char *cmd)
 {
@@ -23,6 +38,34 @@ void	check_str(char *str, char *cmd)
 	//	free(cmd);
 		exit(1);
 	}
+}
+
+char	*find_path(char *cmd, char **envp)
+{
+	int		i;
+	char	*str;
+	char	**tab;
+
+	if (access(cmd, F_OK) == 0)
+		return (cmd);
+	i = -1;
+	while (envp[++i])
+	{
+		if (!ft_strncmp(envp[i], "PATH=", 5))
+		{
+			tab = ft_split(ft_strchr(envp[i], '/'), ':');
+			break ;
+		}
+	}
+	i = -1;
+	while (tab[++i])
+	{
+		str = ft_strjoin(ft_strjoin(tab[i], "/"), cmd);
+		if (access(str, F_OK) == 0)
+			return (str);
+	}
+	check_str(str, cmd);
+	return (cmd);
 }
 
 void	free_arr(char **arr)
@@ -108,113 +151,4 @@ int	found_char(char *str, char c)
 		}
 	}
 	return (1);
-}
-
- int		redirection(t_command **commands, char **env)
- {
-	int		i;
-	int		exec_counter = 0;
-	t_param *param;
-
-	i = 0;
-	param = malloc(sizeof(t_param));
-	while (commands[i] != NULL)
-	{
-		if (commands[i]->fileout != NULL && commands[i]->append == 0)
-		{
-			param->fd = open(commands[i]->fileout, O_CREAT | O_RDWR | O_TRUNC, 0664);
-			if (!param->fd)
-				perror("Error:");
-				//printf("4\n");
- 			dup2(param->fd, 1);
-		//	dup2(1, 1);
-		//	new_process(commands, exec_counter, env);
-/* 			close(1);
-		//	dup2(0, 1);
-			dup(1);
-			dup(0);
-			dup(param->fd); */
-		//	close(param->fd);
-		}
-		else if (commands[i]->append != 0)
-		{
-			param->fd = open(commands[i]->fileout, O_CREAT | O_WRONLY | O_APPEND, 0664);
-			if (!param->fd)
-				perror("Error:");
-			dup2(param->fd, 1);
-/* 			printf("4\n");
-			new_process(commands, exec_counter, env);
-			dup2(0, 1);
-			close(param->fd); */
-		}
-		else if (commands[i]->filein != NULL)
-		{
-			param->fd = open(commands[i]->filein, O_RDONLY);
-			if (!param->fd)
-				perror("Error:");
-			close(0);
-			dup2(param->fd, 0);
-			//close(param->fd);
-		}
-		i++;
- 	}
-	return(0); 
-}
-
-
-/* 
-int	exec_cmds(t_param *param, char **cmds, int exec_count, char **env)
-{
-	if (cmds[1])
-		param->process_status = new_process(cmds, exec_count, env);
-	return (0);
-}
- */
-
-
-void    redirect(char *buff)
-{
-	int		redirect_flag;
-	// times of ">" 
-	char	*redirect_file;
-	int		fd;
-	char	*ptr;
-
-	ptr = buff;
-	free(buff);
-    redirect_flag = 0;
-    redirect_file = NULL;
-	while(*ptr != '\0')
-	{
-		if(*ptr == '>')
-		{
-			ptr++;
-			++redirect_flag;
-			// Si este bit es>, la cuenta se incrementa en uno y este bit 
-			// se reescribe como \0 para evitar que se interprete
-			// como un comando
-
-			if(*ptr == '>')
-			{
-				++redirect_flag;
-				ptr++;
-			}
-			
-			while(*ptr == ' ' && *ptr != '\0')
-			{
-				ptr++;
-			}
-
-			redirect_file = ptr;
-			// Después de la detección >>, el siguiente es el nombre del
-			// archivo redirigido, que será analizado
-			
-			while(*ptr != ' ' && *ptr != '\0')
-			{
-				ptr++;
-			}				
-			*ptr = '\0';
-		}
-		ptr++;
-	}
 }

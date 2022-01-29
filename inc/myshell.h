@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/28 20:46:31 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/29 14:21:39 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 #define TT_EMPTY 0
 #define TT_OP 1
 #define TT_WORD 2
-#define TT_EOF 4
+#define TT_EOF 3
 
 #define NOQUOTE 0
 #define SQUOTE 1
@@ -52,8 +52,7 @@
 #define OT_HEREDOC 5
 #define OT_NEWLINE 6
 
-
-/*
+/* 
 ANSI Color codes
  */
 #define RED   		"\033[0;31m"
@@ -62,40 +61,32 @@ ANSI Color codes
 #define GREEN 		"\033[0;32m"
 #define BLUE 		"\033[0;34m"
 #define INVERT		"\033[0;7m"
-#define RESET  		"\e[0m"
+#define RESET  		"\e[0m" 
 #define BOLD		"\e[1m"
 #define ITALICS		"\e[3m"
 
-typedef struct  s_keyvalue
+typedef struct	s_keyval
 {
 	char	*key;
-	char	*value;
-}				t_keyvalue;
+	char	*val;
+}				t_keyval;
 
 typedef struct  s_param
 {
-//  char    **comandos;
-    char    *token;
-    char    *line;
-    int     exec_count;
-    int     dir;
-    char    *dir_cmd;
-//  char    *dir_cmd2;
-//  char    *indir_cmd;
-//  char    *indir_cmd2;
-    int     indir;
-//  int     status;
-    int     process_status;
-//  int     dir_flag;
-    char    *aux;
-    char    *cmds[32]; // char *args[32];
-    int     fd;
-	t_keyvalue	**variables;
-	int		num_vars;
+	int		tmp_in;
+	int		tmp_out;
+	int		fd_in;
+	int 	fd_out;
+	char	*line;
+	int		cmds; // num of commands
+	t_keyval	**env;
+	int			envc; // num of env variables
+
 }               t_param;
 
 typedef struct s_command
 {
+	int		is_assignment;
 	char*	name;
 	int		argc;
 	char**	argv;
@@ -115,23 +106,26 @@ typedef struct s_token
 }			t_token;
 
 /* Lexer */
-t_token *tokenizer(char *input);
-int	expander(char **text, int pos);
-int is_op(char c);
-char	*ft_strreplace(char *str, char *insert, int pos, int len);
+t_token 	*tokenizer(char *input);
+int			expander(char **text, int pos);
+char		*ft_strreplace(char *str, char *insert, int pos, int len);
 
 /* Heredoc */
-char *read_heredoc(char **str, int *pos);
+char 		*read_heredoc(char **str, int *pos);
 
 /* parser */
 t_command	**parser(t_token *tokens);
 void		print_cmd(t_command *cmd);
 
 /* Shell functions*/
-
 int         myshell_loop(t_param *param, char **av, int execution_counter, char **env);
 int         new_process(t_command *commands, int execution_counter, char **env);
 void		executer(char **env, t_token *tokens, t_command **cmd_lst);
+
+/* Built ins*/
+void		bi_exit(t_command *cmd, t_param *param);
+void		bi_env(t_param *param);
+int			bi_export(t_command *cmd, t_param *param);
 
 /* diffrent utility functions */
 void        print_env(char **env);
@@ -140,21 +134,16 @@ char        *rl_gets();
 char        space_tab(unsigned int i, char c);
 char        **parse(char *buff);
 int         get_cmd(t_param *param);
-void        redirect(char *buff);
-int         execute(char *buff, char **envp);
 char        *rl_gets();
 char        *find_path(char *cmd, char **envp);
 void        check_str(char *str, char *cmd);
 void        free_arr(char **arr);
-int     	redirection(t_command **commands, char **env);
-void        redirect(char *buff);
-int     	exec_cmds(t_param *param, char **cmds, int exec_count, char **env);
 int         found_char(char *str, char c);
-int         check_redir(t_command *commands, char **env);
-int         found_op(char *str, char *op);
-int         re_direction_and_pipe(char **args, char **env);
-char        **split_line(char *line);
-char        **split_pipes(char *input);
-char        *trim_ws(char *str);
+void 		cmd_execute(t_command **cmd, t_param *param, char **env);
+int			try_builtins(t_command *cmd, t_param *param, char **env);
+
+/* environment */
+t_keyval	*get_keyval(char *str);
+void		set_env_var(t_keyval *var, t_param *param);
 
 #endif

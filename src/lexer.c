@@ -221,6 +221,8 @@ t_token	*tokenizer(char *input)
 	int i;
 	int pos;
 
+	if (input == NULL || *input == 0)
+		return NULL;
 	tokens = (t_token *)malloc(MAX_TKNS * sizeof(t_token));
 	i = 0;
 	while (i < MAX_TKNS)

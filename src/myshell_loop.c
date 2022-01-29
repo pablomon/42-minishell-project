@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell_loop.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/28 21:34:40 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/29 09:47:46 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,25 @@
 
 int	get_cmd(t_param *param)
 {
-	param->line = rl_gets();
-	if (param->line != NULL)
+	char	*rawline;
+	int		i;
+
+	// param->line = rl_gets();
+	rawline = rl_gets();
+	i = 0;
+	if (rawline != NULL)
+	{
+		// Limpiar el principio del input de espacios
+		while (ft_isspace(rawline[i]))
+			i++;
+		param->line = ft_strdup(&rawline[i]);
+		free(rawline);
+		// Si después de limpiar todavía hay algo devuelve 1
+		if (*param->line != 0)
+			return (1);
+		// Si la linea está vacía devuelve 0
 		return (0);
-	// printf("get_cmd: param->line is: %s\n", param->line);
+	}
 	else
 	{
 		perror("Error get_cmd: ");
@@ -38,68 +53,16 @@ int	get_cmd(t_param *param)
 	}
 }
 
-int	ft_arr_len(char **arr)
+void	clean_tokens(t_token *tkns)
 {
 	int	i;
-	i = 0;
-	while (arr && arr[i])
-		i++;
-	return (i);
-}
 
-void set_var(char *name, char *value, t_param *param)
-{
-	int	i;
-	t_keyvalue **vars_new;
-	t_keyvalue **tmp;
-
-	vars_new = (t_keyvalue**)(malloc(sizeof(t_keyvalue*) * (param->num_vars + 2)));
 	i = 0;
-	while (i < param->num_vars)
+	while (tkns[i].type != TT_EOF)
 	{
-		vars_new[i] = param->variables[i];
+		free(tkns[i].cnt);
 		i++;
 	}
-	vars_new[i] = (t_keyvalue*)(malloc(sizeof(t_keyvalue)));
-	vars_new[i]->key = name;
-	vars_new[i]->value = value;
-
-	// TODO no liberar si null
-	tmp = param->variables;
-	param->variables = vars_new;
-	free(tmp);
-	param->num_vars++;
-}
-
-int	assignment_check(t_param *param)
-{
-	char *clean_line;
-	char *name;
-	char *value;
-	char **split_res;
-	int i;
-
-	split_res = ft_split(param->line, ' ');
-	if (split_res == NULL || ft_arr_len(split_res) != 1)
-		return 0;
-	clean_line = ft_strtrim(param->line, " \t");
-	if (!ft_isalpha(*clean_line))
-		return 0;
-	i = 0;
-	while(ft_isalnum(clean_line[i]))
-	{
-		name[i] = clean_line[i];
-		i++;
-	}
-	name[i] = '\0';
-	if (clean_line[i] != '=')
-		return 0;
-
-	i++;
-	value = &clean_line[i];
-	printf("name: %s\n", name);
-	set_var(name, value, param);
-	return 1;
 }
 
 int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
@@ -122,16 +85,6 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 			write(STDIN_FILENO, "($) ", 4);
 		read = get_cmd(param);
 
-		if (assignment_check(param))
-		{
-			ft_putstr("----\n");
-			return 0;
-		}
-		if (param->num_vars > 0)
-		{
-			printf("key = %s, value = %s\n", param->variables[0]->key, param->variables[0]->value);
-		}
-
 		// exit condition
 		if (read == EOF)
 		{
@@ -139,16 +92,24 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 			write(STDIN_FILENO, "\n", 1);
 			return (0);
 		}
-
-		if (read == 0)
+		// si la linea tiene contenido
+		if (read)
 		{
 			tokens = tokenizer(param->line);
 			commands = parser(tokens);
-			executer(env, tokens, commands);
+			i = 0;
+			while (commands[i] != NULL)
+				i++;
+			param->cmds = i++;
 			free(param->line);
-			// free tokens
-			// free commands
+			cmd_execute(commands, param, env);
+
+			clean_tokens(tokens);
+			free(tokens);
+			free(commands);
 		}
+		else
+			ft_putstr("\n");
 		exec_count++;
 	}
 //	close(param->fd);

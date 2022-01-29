@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/01/16 12:35:12 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/29 14:42:06 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_command	*new_command(int max_args)
 		cmd->argv[i] = NULL;
 		i++;
 	}
+	cmd->is_assignment = 0;
 	cmd->name		= NULL;
 	cmd->filein		= NULL;
 	cmd->fileout	= NULL;
