@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/29 14:21:39 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/30 13:59:39 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,8 @@ typedef struct s_token
 }			t_token;
 
 /* Lexer */
-t_token 	*tokenizer(char *input);
-int			expander(char **text, int pos);
+t_token		*tokenizer(char *input, t_param *param);
+int			expander(char **text, int pos, t_param *param);
 char		*ft_strreplace(char *str, char *insert, int pos, int len);
 
 /* Heredoc */
@@ -118,32 +118,35 @@ t_command	**parser(t_token *tokens);
 void		print_cmd(t_command *cmd);
 
 /* Shell functions*/
-int         myshell_loop(t_param *param, char **av, int execution_counter, char **env);
+int         myshell_loop(t_param *param, char **av, int execution_counter);
 int         new_process(t_command *commands, int execution_counter, char **env);
 void		executer(char **env, t_token *tokens, t_command **cmd_lst);
 
 /* Built ins*/
 void		bi_exit(t_command *cmd, t_param *param);
 void		bi_env(t_param *param);
-int			bi_export(t_command *cmd, t_param *param);
+void		bi_export(t_command *cmd, t_param *param);
+void		bi_unset(t_command *cmd, t_param *param);
 
 /* diffrent utility functions */
-void        print_env(char **env);
 char        *rl_gets();
 
 char        space_tab(unsigned int i, char c);
 char        **parse(char *buff);
 int         get_cmd(t_param *param);
 char        *rl_gets();
-char        *find_path(char *cmd, char **envp);
+char        *find_path(char *cmd, t_param *param);
 void        check_str(char *str, char *cmd);
 void        free_arr(char **arr);
 int         found_char(char *str, char c);
-void 		cmd_execute(t_command **cmd, t_param *param, char **env);
-int			try_builtins(t_command *cmd, t_param *param, char **env);
+void 		cmd_execute(t_command **cmd, t_param *param);
+int			try_builtins(t_command *cmd, t_param *param);
 
 /* environment */
 t_keyval	*get_keyval(char *str);
 void		set_env_var(t_keyval *var, t_param *param);
+void		unset_env_var(char *name, t_param *param);
+char		*mygetenv(char *name, t_param *param);
+char		**make_envp(t_param *param);
 
 #endif

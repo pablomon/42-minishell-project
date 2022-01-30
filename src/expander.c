@@ -19,7 +19,7 @@ char	*ft_strreplace(char *str, char *insert, int pos, int len)
 	return (new);
 }
 
-int	expander(char **text, int pos)
+int	expander(char **text, int pos, t_param *param)
 {
 	printf("Expander:\n");
 	char	var_name[ft_strlen(*text) + 1];
@@ -50,13 +50,12 @@ int	expander(char **text, int pos)
 
 	printf("env var %s = ", var_name);
 
-	// TODO esto está bien así o tenemos que cogerlo del char **env?
-	if (getenv(var_name) != NULL)
-		printf("%s\n",getenv(var_name));
+	if (mygetenv(var_name, param) != NULL)
+		printf("%s\n",mygetenv(var_name, param));
 	else
 		printf("\n");
 	char *tmp = *text;
-	*text = ft_strreplace(*text, getenv(var_name), pos, len);
-	free (tmp);
+	*text = ft_strreplace(*text, mygetenv(var_name, param), pos, len);
+	// free (tmp);
 	return (0);
 }

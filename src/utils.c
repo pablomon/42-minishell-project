@@ -6,26 +6,11 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/29 14:07:22 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/30 13:15:27 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
-
-t_keyval	*get_keyval(char *str)
-{
-	int	len;
-	int	len2;
-	t_keyval	*pair;
-
-	pair = (t_keyval*)(malloc(sizeof(t_keyval)));
-	len = 0;
-	while (str[len] != '=')
-		len++;
-	pair->key = ft_substr(str, 0, len);
-	pair->val = ft_strdup(&str[len + 1]);
-	return pair;
-}
 
 void	check_str(char *str, char *cmd)
 {
@@ -40,12 +25,15 @@ void	check_str(char *str, char *cmd)
 	}
 }
 
-char	*find_path(char *cmd, char **envp)
+char	*find_path(char *cmd, t_param *param)
 {
 	int		i;
 	char	*str;
 	char	**tab;
+	char	**envp;
 
+	envp = make_envp(param);
+ 	//TODO cambiar la función para que no utilize envp, si no directamente param->env
 	if (access(cmd, F_OK) == 0)
 		return (cmd);
 	i = -1;
@@ -76,19 +64,6 @@ void	free_arr(char **arr)
 	while (arr[i])
 		free(arr[i++]);
 	free(arr);
-}
-
-void	print_env(char **env)
-{
-	int i;
-
-	i = 0;
-	while (env[i] != NULL)
-	{
-		write(STDOUT_FILENO, env[i], strlen(env[i]));
-		write(STDOUT_FILENO, "\n", 1);
-		i++;
-	}
 }
 
 char	*rl_gets()

@@ -23,7 +23,7 @@ INC			=	inc
 SOURCES_C	=	myshell.c myshell_loop.c \
 				utils.c parser.c \
 				expander.c lexer.c executer.c \
-				heredoc.c builtins.c
+				heredoc.c builtins.c environment.c
 
 SOURCES_G	=	get_next_line.c get_next_line_utils.c \
 

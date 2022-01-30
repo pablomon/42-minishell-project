@@ -1,6 +1,6 @@
 #include "../inc/myshell.h"
 
-int	try_builtins(t_command *cmd, t_param *param, char **env)
+int	try_builtins(t_command *cmd, t_param *param)
 {
 	int	ret;
 
@@ -11,12 +11,14 @@ int	try_builtins(t_command *cmd, t_param *param, char **env)
 		bi_env(param);
 	else if (!ft_strcmp(cmd->name, "export"))
 		bi_export(cmd, param);
+	else if (!ft_strcmp(cmd->name, "unset"))
+		bi_unset(cmd, param);
 	else
 		ret = 0;
 	return (ret);
 }
 
-void cmd_execute(t_command **cmd, t_param *param, char **env)
+void cmd_execute(t_command **cmd, t_param *param)
 {
 	pid_t	child_pid;
 	int		i;
@@ -46,7 +48,7 @@ void cmd_execute(t_command **cmd, t_param *param, char **env)
 	{
 		/* paso aquí los built ins porque cualquier comando puede ser
 		built in, no solo el primero */
-		if (try_builtins(cmd[i], param, env))
+		if (try_builtins(cmd[i], param))
 		{
 			i++;
 			continue;
@@ -84,9 +86,11 @@ void cmd_execute(t_command **cmd, t_param *param, char **env)
  			if (access(cmd[i]->argv[0], F_OK) == 0)
 				file = cmd[i]->argv[0];
 			else
-				file = find_path(cmd[i]->argv[0], env);
-			if (execve(file, cmd[i]->argv, env) == -1)
+				file = find_path(cmd[i]->argv[0], param);
+			char **envp =  make_envp(param);
+			if (execve(file, cmd[i]->argv, envp) == -1)
 				check_str(file, cmd[i]->argv[0]);
+			// TODO Podemos hacer un free_arr(envp); ???
 		}
 		i++;
 		printf("Command %d executed\n", i);

@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/29 09:47:46 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/01/30 12:54:48 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	clean_tokens(t_token *tkns)
 	}
 }
 
-int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
+int myshell_loop(t_param *param, char *av[], int exec_count)
 {
 	int		interactive;
 	int		process_status;
@@ -95,14 +95,14 @@ int myshell_loop(t_param *param, char *av[], int exec_count, char **env)
 		// si la linea tiene contenido
 		if (read)
 		{
-			tokens = tokenizer(param->line);
+			tokens = tokenizer(param->line, param);
 			commands = parser(tokens);
 			i = 0;
 			while (commands[i] != NULL)
 				i++;
 			param->cmds = i++;
 			free(param->line);
-			cmd_execute(commands, param, env);
+			cmd_execute(commands, param);
 
 			clean_tokens(tokens);
 			free(tokens);

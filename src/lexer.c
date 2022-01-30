@@ -30,7 +30,7 @@ int	delimit_tkn(int tkn_pos, char *cnt, t_token *tkn)
 	return (1);
 }
 
-int	get_token(char **str, int *pos, t_token *token)
+int	get_token(char **str, int *pos, t_token *token, t_param *param)
 {
 	ft_putstr("\nObteniendo token...\n");
 
@@ -133,7 +133,7 @@ The token shall not be delimited by the end of the substitution.*/
 		if (quoted!=SQUOTE && c == '$')
 		{
 				printf("Call expander:\n");
-				int exp_res = expander(str, *pos);
+				int exp_res = expander(str, *pos, param);
 				if (exp_res == -1)
 				{
 					*pos = *pos + 1;
@@ -214,7 +214,7 @@ The <newline> that ends the line is not considered part of the comment. */
 	return (1);
 }
 
-t_token	*tokenizer(char *input)
+t_token	*tokenizer(char *input, t_param *param)
 {
 	printf("---- LEXER ----\n");
 	t_token *tokens;
@@ -234,7 +234,7 @@ t_token	*tokenizer(char *input)
 	}
 	pos = 0;
 	i = 0;
-	while (get_token(&input, &pos, &tokens[i]))
+	while (get_token(&input, &pos, &tokens[i], param))
 	{
 		printf("token : '%s'\n", tokens[i].cnt);
 		i++;
