@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/30 13:59:39 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/03 12:23:41 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,9 @@ void		set_env_var(t_keyval *var, t_param *param);
 void		unset_env_var(char *name, t_param *param);
 char		*mygetenv(char *name, t_param *param);
 char		**make_envp(t_param *param);
+
+/* signals */
+void		reg_parent_signals();
+void		reg_child_signals();
 
 #endif

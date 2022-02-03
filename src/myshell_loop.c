@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/30 12:54:48 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/01 21:04:31 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,13 @@ int myshell_loop(t_param *param, char *av[], int exec_count)
 	{
 		if (interactive == 1)
 			write(STDIN_FILENO, "($) ", 4);
-		read = get_cmd(param);
 
+		read = get_cmd(param);
 		// exit condition
 		if (read == EOF)
 		{
 			free(param->line);
+			// llamar a la funcion q hagamos para limpiar todo antes de salir
 			write(STDIN_FILENO, "\n", 1);
 			return (0);
 		}

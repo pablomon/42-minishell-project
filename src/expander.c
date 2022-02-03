@@ -1,12 +1,15 @@
 #include "../inc/myshell.h"
 
+#define VERBOSE 0
+
 char	*ft_strreplace(char *str, char *insert, int pos, int len)
 {
 	char	*s1;
 	char	*s2;
 	char	*new;
 
-	printf("replace:");
+	if (VERBOSE)
+		printf("replace:");
 	s1 = calloc(pos + 1, sizeof(char));
 	s1 = ft_strncpy(s1, str, pos);
 	if (insert == NULL)
@@ -21,7 +24,8 @@ char	*ft_strreplace(char *str, char *insert, int pos, int len)
 
 int	expander(char **text, int pos, t_param *param)
 {
-	printf("Expander:\n");
+	if (VERBOSE)
+		printf("Expander:\n");
 	char	var_name[ft_strlen(*text) + 1];
 	int		len;
 	char	*str;
@@ -30,7 +34,8 @@ int	expander(char **text, int pos, t_param *param)
 	len = 0;
 	if (str[1] == '?')
 	{
-		printf("TODO $? value\n");
+		if (VERBOSE)
+			printf("TODO $? value\n");
 		char *serror = ft_itoa(errno);
 		*text = ft_strreplace(*text, serror, pos, ft_strlen(serror));
 		free(serror);
@@ -38,7 +43,8 @@ int	expander(char **text, int pos, t_param *param)
 	}
 	if (!ft_isalpha(str[1]))
 	{
-		printf("No alpha after $ (%c)\n", str[1]);
+		if (VERBOSE)
+			printf("No alpha after $ (%c)\n", str[1]);
 		return (-1);
 	}
 	while (str[len + 1] && ft_isalnum(str[len + 1]))
@@ -48,12 +54,15 @@ int	expander(char **text, int pos, t_param *param)
 	}
 	var_name[len] = 0;
 
-	printf("env var %s = ", var_name);
+	if (VERBOSE)
+		printf("env var %s = ", var_name);
 
 	if (mygetenv(var_name, param) != NULL)
-		printf("%s\n",mygetenv(var_name, param));
+		if (VERBOSE)
+			printf("%s\n",mygetenv(var_name, param));
 	else
-		printf("\n");
+		if (VERBOSE)
+			printf("\n");
 	char *tmp = *text;
 	*text = ft_strreplace(*text, mygetenv(var_name, param), pos, len);
 	// free (tmp);

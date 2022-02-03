@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/30 12:53:14 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/03 12:27:56 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ int main(int ac, char *av[], char **env)
 		printf("Non interactive mode\n");
 		myshell_nointerac(av[1], param);
 	}
+	reg_parent_signals();
+
 	printf("Entering interactive mode\n");
 	status = myshell_loop(param, av, execution_coun);
 	free(param);

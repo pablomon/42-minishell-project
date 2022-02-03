@@ -1,5 +1,6 @@
 #include "../inc/myshell.h"
 #define MAX_TKNS 1000
+#define VERBOSE 0
 
 int	is_op(char c)
 {
@@ -10,7 +11,8 @@ int	is_op(char c)
 
 int	delimit_tkn(int tkn_pos, char *cnt, t_token *tkn)
 {
-	printf("returning delimited token\n");
+	if (VERBOSE)
+		printf("returning delimited token\n");
 	cnt[tkn_pos] = 0;
 	tkn->cnt = ft_strdup(cnt);
 	if (tkn->type != TT_OP)
@@ -32,7 +34,8 @@ int	delimit_tkn(int tkn_pos, char *cnt, t_token *tkn)
 
 int	get_token(char **str, int *pos, t_token *token, t_param *param)
 {
-	ft_putstr("\nObteniendo token...\n");
+	if (VERBOSE)
+		ft_putstr("\nObteniendo token...\n");
 
 	char		prev;
 	int			quoted;
@@ -45,7 +48,8 @@ int	get_token(char **str, int *pos, t_token *token, t_param *param)
 	quoted = NOQUOTE;
 	tkn_pos = 0;
 
-	printf("source: %s\n", &((*str)[*pos]));
+	if (VERBOSE)
+		printf("source: %s\n", &((*str)[*pos]));
 	while (((*str)[*pos]) != 0) // TODO cambiar por EOF ???
 	{
 		if (heredoc)
@@ -59,7 +63,8 @@ int	get_token(char **str, int *pos, t_token *token, t_param *param)
 		c = ((*str)[*pos]);
 		if (token->delimited)
 		{
-			printf("returning delimited token\n");
+			if (VERBOSE)
+				printf("returning delimited token\n");
 			cnt[tkn_pos] = 0;
 			token->cnt = ft_strdup(cnt);
 			return (1);
@@ -69,11 +74,13 @@ and can be used with the current characters to form an operator,
 it shall be used as part of that (operator) token. */
 		if (!quoted && token->type == TT_OP)
 		{
-			printf("Checking size 2 operator\n");
+			if (VERBOSE)
+				printf("Checking size 2 operator\n");
 			if ((c == '<' && prev == '<')
 				|| (c == '>' && prev == '>'))
 			{
-				printf("Adding character to operator\n");
+				if (VERBOSE)
+					printf("Adding character to operator\n");
 				cnt[tkn_pos] = c;
 				prev = c;
 				*pos = *pos + 1;
@@ -101,12 +108,14 @@ The token shall not be delimited by the end of the quoted field. */
 		{
 			if (c == '\'')
 			{
-				printf("Single Quoting\n");
+				if (VERBOSE)
+					printf("Single Quoting\n");
 				quoted = SQUOTE;
 			}
 			else
 			{
-				printf("Double Quoting\n");
+				if (VERBOSE)
+					printf("Double Quoting\n");
 				quoted = DQUOTE;
 			}
 			*pos = *pos + 1;
@@ -114,7 +123,8 @@ The token shall not be delimited by the end of the quoted field. */
 		}
 		if ((quoted == SQUOTE && c == '\'') || (quoted == DQUOTE && c == '"'))
 		{
-			printf("Closing quote\n");
+			if (VERBOSE)
+				printf("Closing quote\n");
 			quoted = 0;
 			*pos = *pos + 1;
 			continue;
@@ -132,17 +142,18 @@ shall be included unmodified in the result token, including any embedded or encl
 The token shall not be delimited by the end of the substitution.*/
 		if (quoted!=SQUOTE && c == '$')
 		{
+			if (VERBOSE)
 				printf("Call expander:\n");
-				int exp_res = expander(str, *pos, param);
-				if (exp_res == -1)
-				{
-					*pos = *pos + 1;
-				}
-				if (exp_res == 0)
-				{
-					continue;
-				}
-				*pos = *pos + exp_res;
+			int exp_res = expander(str, *pos, param);
+			if (exp_res == -1)
+			{
+				*pos = *pos + 1;
+			}
+			if (exp_res == 0)
+			{
+				continue;
+			}
+			*pos = *pos + exp_res;
 		}
 /* If the current character is not quoted and can be used as the first character of a new operator,
 the current token (if any) shall be delimited.
@@ -154,7 +165,8 @@ The current character shall be used as the beginning of the next (operator) toke
 				return (delimit_tkn(tkn_pos, cnt, token));
 				continue;
 			}
-			printf("Starting operator\n");
+			if (VERBOSE)
+				printf("Starting operator\n");
 			token->type = TT_OP;
 			cnt[0] = c;
 			prev = c;
@@ -174,7 +186,8 @@ The current character shall be used as the beginning of the next (operator) toke
 and the current character shall be discarded. */
 		if (!quoted && (c == ' ' || c == '\t'))
 		{
-			printf("Found blank\n");
+			if (VERBOSE)
+				printf("Found blank\n");
 			*pos = *pos + 1;
 			if (token->type != TT_EMPTY)
 				return (delimit_tkn(tkn_pos, cnt, token));
@@ -184,7 +197,8 @@ and the current character shall be discarded. */
 // If the previous character was part of a word, the current character shall be appended to that word.
 		if (token->type == TT_WORD)
 		{
-			printf("%c\n", c);
+			if (VERBOSE)
+				printf("%c\n", c);
 			cnt[tkn_pos] = c;
 			tkn_pos++;
 			*pos = *pos + 1;
@@ -197,7 +211,8 @@ The <newline> that ends the line is not considered part of the comment. */
 		// Creo que no hay que hacerlo
 
 // The current character is used as the start of a new word.
-		printf("Starting word: \n%c\n", c);
+		if (VERBOSE)
+			printf("Starting word: \n%c\n", c);
 		token->type = TT_WORD;
 		cnt[0] = c;
 		*pos = *pos + 1;
@@ -207,7 +222,8 @@ The <newline> that ends the line is not considered part of the comment. */
 	if (token->type == TT_EMPTY)
 	{
 		token->type = TT_EOF;
-		printf("No content, returning EOF\n");
+		if (VERBOSE)
+			printf("No content, returning EOF\n");
 		return (0);
 	}
 	delimit_tkn(tkn_pos, cnt, token);
@@ -216,7 +232,8 @@ The <newline> that ends the line is not considered part of the comment. */
 
 t_token	*tokenizer(char *input, t_param *param)
 {
-	printf("---- LEXER ----\n");
+	if (VERBOSE)
+		printf("---- LEXER ----\n");
 	t_token *tokens;
 	int i;
 	int pos;
@@ -236,19 +253,23 @@ t_token	*tokenizer(char *input, t_param *param)
 	i = 0;
 	while (get_token(&input, &pos, &tokens[i], param))
 	{
-		printf("token : '%s'\n", tokens[i].cnt);
+		if (VERBOSE)
+			printf("token : '%s'\n", tokens[i].cnt);
 		i++;
 	}
 	i = 0;
-	printf("\nShowing obtained tokens..\n");
+	if (VERBOSE)
+		printf("\nShowing obtained tokens..\n");
 	while (1)
 	{
 		if (tokens[i].type == TT_EOF)
 		{
-			printf("token %d: '%s' EOF\n", i, tokens[i].cnt);
+			if (VERBOSE)
+				printf("token %d: '%s' EOF\n", i, tokens[i].cnt);
 			break;
 		}
-		printf("token %d: '%s'\n", i, tokens[i].cnt);
+		if (VERBOSE)
+			printf("token %d: '%s'\n", i, tokens[i].cnt);
 		i++;
 	}
 	return tokens;

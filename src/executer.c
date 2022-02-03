@@ -1,5 +1,6 @@
 #include "../inc/myshell.h"
 
+#include <signal.h>
 int	try_builtins(t_command *cmd, t_param *param)
 {
 	int	ret;
@@ -80,6 +81,8 @@ void cmd_execute(t_command **cmd, t_param *param)
 		/* redirect output */
 		dup2(param->fd_out, 1);
 		close(param->fd_out);
+
+		reg_child_signals();
  		child_pid = fork();
 		if (child_pid == 0)
 		{
@@ -87,10 +90,15 @@ void cmd_execute(t_command **cmd, t_param *param)
 				file = cmd[i]->argv[0];
 			else
 				file = find_path(cmd[i]->argv[0], param);
-			char **envp =  make_envp(param);
+			char **envp = make_envp(param);
 			if (execve(file, cmd[i]->argv, envp) == -1)
 				check_str(file, cmd[i]->argv[0]);
 			// TODO Podemos hacer un free_arr(envp); ???
+		}
+		else
+		{
+			wait(NULL);
+			reg_parent_signals();
 		}
 		i++;
 		printf("Command %d executed\n", i);

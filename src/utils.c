@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/30 13:15:27 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/01 21:04:48 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ char	*rl_gets()
 		add_history (line_read);
     return (line_read);
 }
-
 
 int	found_op(char *str, char *op)
 {

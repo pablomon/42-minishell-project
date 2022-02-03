@@ -6,15 +6,19 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/01/29 14:42:06 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/03 12:16:10 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 #define MAX_COMMANDS 1000
 
+#define VERBOSE 0
+
 void	print_cmd(t_command *cmd)
 {
+	if (!VERBOSE)
+		return;
 	int	i;
 
 	i = 0;
@@ -66,7 +70,8 @@ int	parse_redir(t_token tkn, t_token nxt, t_command *cmd, int *pos)
 	{
 		if (nxt.type != TT_WORD)
 		{
-			printf("syntax error: unexpected token near `%s\'\n", tkn.cnt);
+			if (VERBOSE)
+				printf("syntax error: unexpected token near `%s\'\n", tkn.cnt);
 			return (EXIT_FAILURE);
 		}
 		if (ot == OT_ORED || ot == OT_ORED2)
@@ -96,7 +101,8 @@ int	get_command(t_token *tokens, t_command *cmd, int *pos)
 		{
 			if (cmd->name == NULL)
 			{
-				printf("syntax error: unexpected token near `%s\'\n", tkn.cnt);
+				if (VERBOSE)
+					printf("syntax error: unexpected token near `%s\'\n", tkn.cnt);
 				return (0);
 			}
 			cmd->piped = tkn.op_type == OT_PIPE;
@@ -134,7 +140,8 @@ t_command	**parser(t_token *tokens)
 	int			i;
 	int			max_args;
 
-	printf("\nPARSER----\n");
+	if (VERBOSE)
+		printf("\nPARSER----\n");
 	cmd_lst = (t_command**)malloc(sizeof(t_command*) * MAX_COMMANDS);
 	i = 0;
 	while (i < MAX_COMMANDS)
@@ -147,7 +154,8 @@ t_command	**parser(t_token *tokens)
 	while (tokens[max_args].type != TT_EOF)
 		max_args++;
 	i = 0;
-	printf("max args = %d\n", max_args);
+	if (VERBOSE)
+		printf("max args = %d\n", max_args);
 	cmd_lst[i] = new_command(max_args);
 	while (get_command(tokens, cmd_lst[i], &pos))
 	{
@@ -157,9 +165,11 @@ t_command	**parser(t_token *tokens)
 	i = 0;
 	while (cmd_lst[i] != NULL)
 	{
-		printf("Command %d:\n", i);
+		if (VERBOSE)
+			printf("Command %d:\n", i);
 		print_cmd(cmd_lst[i]);
-		printf("\n");
+		if (VERBOSE)
+			printf("\n");
 		i++;
 	}
 	return cmd_lst;
