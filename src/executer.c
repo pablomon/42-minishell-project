@@ -10,9 +10,8 @@ int	try_bis(t_command *cmd, t_param *param, int ischild, int cmd_num)
 	int	ret;
 
 	ret = 1;
-	if (!ft_strcmp(cmd->name, "exit"))
-		bi_exit(cmd, param, ischild, cmd_num);
-	else if (!ft_strcmp(cmd->name, "env"))
+		
+	if (!ft_strcmp(cmd->name, "env"))
 		bi_env(param, ischild);
 	else if (!ft_strcmp(cmd->name, "export"))
 		bi_export(cmd, param, ischild);
@@ -154,6 +153,38 @@ void	update_command_args(t_command *c, t_param *param)
 		c->lastfileout = c->lastfileouttkn->cnt;
 }
 
+void	execute_child(t_command *cmd, t_param *param, int cmd_num, int *fds)
+{	
+	char	**envp;
+	char	*file;
+
+	// stdin -> param->fd_in
+	dup2(param->fd_in, STDIN_FILENO);
+	//	return (my_perror(param, DUP_ERR, NULL, 1));
+	// si el comando tiene fileout: stdout -> param->fd_out
+	if (param->fd_out != STDOUT_FILENO)
+		dup2(param->fd_out, STDOUT_FILENO);
+	//	return (my_perror(param, DUP_ERR, NULL, 1));
+	// si el comando no tiene fileout is no es el ultimo comando: stdout -> pipe read
+	else if (cmd_num != param->cmdc - 1)
+		dup2(fds[WRITE_END], STDOUT_FILENO);
+	// cierra pipes para que le llegue un EOF al padre
+	close(fds[WRITE_END]);
+	close(fds[READ_END]);
+	// ejecuta el comando:
+	envp = make_envp(param);
+	file = find_path(cmd->argv[0], envp);
+	if (!try_bis(cmd, param, 1, cmd_num))
+	{
+		if (ft_strcmp(cmd->argv[0], "exit") == 0)
+			bi_exit_child(cmd, param, cmd_num);
+		else if (execve(file, cmd->argv, envp) == -1)
+			check_str(file, cmd->argv[0], param);
+	}
+	cleanup(param);
+	exit(g_status);
+}
+
 int	cmd_execute(t_list *cmd_list, t_param *param)
 {
 	pid_t	pid;
@@ -181,13 +212,15 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 			printf("Executing command %d:\n", i);
 			print_cmd(cmd);
 		}
+		// haz redirecciones
 		if (open_redirections(cmd, param, cmd->fileouts))
 		{
 			i++;
 			cmd_list = cmd_list->next;
 			continue;
 		}
-		if (!cmd->name)
+		// si solo son redirecciones continua
+		if (!cmd->argv[0])
 		{
 			i++;
 			cmd_list = cmd_list->next;
@@ -198,38 +231,13 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 		pid = fork();
 		if (pid < 0)
 		{
-			g_status = 1;
 			my_perror(param, FORK_ERR, NULL, 1);
+			g_status = 1;
 			return (g_status);
 		}
 		if (pid == 0)
-		{
-			// stdin -> param->fd_in
-			dup2(param->fd_in, STDIN_FILENO);
-			//	return (my_perror(param, DUP_ERR, NULL, 1));
-			// si el comando tiene fileout: stdout -> param->fd_out
-			if (param->fd_out != STDOUT_FILENO)
-				dup2(param->fd_out, STDOUT_FILENO);
-			//	return (my_perror(param, DUP_ERR, NULL, 1));
-			// si el comando no tiene fileout is no es el ultimo comando: stdout -> pipe read
-			else if (i != param->cmdc - 1)
-				dup2(fds[WRITE_END], STDOUT_FILENO);
-			// cierra pipes para que le llegue un EOF al padre
-			close(fds[WRITE_END]);
-			close(fds[READ_END]);
-			// ejecuta el comando:
-			envp = make_envp(param);
-			file = find_path(cmd->argv[0], envp);
-			if (!try_bis(cmd, param, 1, i))
-			{
-				if (execve(file, cmd->argv, envp) == -1)
-					check_str(file, cmd->argv[0], param);
-			}
-			cleanup(param);
-			exit(0);
-		}
-		waitpid(pid, &status, 0);
-		try_bis(cmd, param, 0, i);
+			execute_child(cmd, param, i, fds);
+
 		reg_parent_signals();
 		//TODO: si es directorio soltar printf("%s: Is a directory"), i++, continue
 		// param->fd_in -> pipe read
@@ -238,17 +246,17 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 		close(fds[WRITE_END]);
 		close(fds[READ_END]);
 		waitpid(pid, &status, 0);
+		g_status = status % 255;
 		if (status == 2)
 			g_status = 130;
 		else if (status == 3)
 			g_status = 131;
-		else
-			g_status = status % 255;
-		
+		if (!try_bis(cmd, param, 0, i))
+			if (ft_strcmp(cmd->argv[0], "exit") == 0)
+				bi_exit_parent(cmd, param, i);
 		i++;
 		cmd_list = cmd_list->next;
 	}
-
 	close(param->fd_in);
 	close(param->fd_out);
 	/* restore in/out defaults */

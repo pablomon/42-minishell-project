@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/20 14:30:14 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/20 23:11:21 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,8 @@ int		cmd_execute(t_list *cmd_list, t_param *param);
 
 /* Built ins*/
 int			is_valid_identifier(char *arg, int allow_equalsign);
-void		bi_exit(t_command *cmd, t_param *param, int ischild, int cmd_num);
+void		bi_exit_child(t_command *cmd, t_param *param, int cmd_num);
+void		bi_exit_parent(t_command *cmd, t_param *param, int cmd_num);
 void		bi_env(t_param *param, int ischild);
 void		bi_export(t_command *cmd, t_param *param, int ischild);
 void		bi_unset(t_command *cmd, t_param *param, int ischild);

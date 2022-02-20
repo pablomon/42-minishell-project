@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 21:14:04 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/20 13:04:56 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/20 17:47:18 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*my_perror(t_param *param, int err_type, char *str, int errnum)
 	if (err_type == NOQUOTE)
 		ft_putstr_fd("minishell: error while looking for matching quote\n", 2);
 	else if (err_type == NODIR)
-		ft_putstr_fd("minishell: No such file or directoryy: ", 2);
+		ft_putstr_fd("minishell: No such file or directory: ", 2);
 	else if (err_type == NOPERM)
 		ft_putstr_fd("minishell: permission denied: ", 2);
 	else if (err_type == NOCMD)
@@ -34,7 +34,7 @@ void	*my_perror(t_param *param, int err_type, char *str, int errnum)
 	else if (err_type == IS_DIR)
 		ft_putstr_fd("minishell: Is a directory: ", 2);
 	else if (err_type == NOT_DIR)
-		ft_putstr_fd("minishell: Not a directoryy: ", 2);
+		ft_putstr_fd("minishell: Not a directory: ", 2);
 	ft_putendl_fd(str, 2);
 	return (NULL);
 }

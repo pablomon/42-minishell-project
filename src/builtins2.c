@@ -1,20 +1,15 @@
 #include "../inc/myshell.h"
 
 
-void	bi_exit(t_command *cmd, t_param *param, int ischild, int cmd_num)
+void	bi_exit_child(t_command *cmd, t_param *param, int cmd_num)
 {
-	int		failed;
-
-	if (cmd_num == 0 && ischild || cmd_num > 0 && !ischild)
-		return;
 	if (param->cmdc == 1)
-		ft_putendl_fd("exit", 2);
-	failed = 0;
+		return;
+	g_status = 130;
 	if (cmd->argc > 2)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
 		g_status = 1;
-		failed = 1;
 	}
 	else if (cmd->argc == 2)
 	{
@@ -25,13 +20,44 @@ void	bi_exit(t_command *cmd, t_param *param, int ischild, int cmd_num)
 			ft_putstr_fd(cmd->argv[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
 			g_status = 2;
-			failed = 1;
 		}
 	}
-	if (failed)
+}
+
+void	bi_exit_parent(t_command *cmd, t_param *param, int cmd_num)
+{
+	int		isexit;
+
+	if (cmd_num != 0)
 		return;
-	cleanup(param);
-	exit(g_status);
+	isexit = 1;
+	g_status = 0;
+	if (param->cmdc == 1)
+		ft_putendl_fd("exit", 2);
+	else
+		isexit = 0;
+	if (cmd->argc > 2)
+	{
+		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		g_status = 1;
+		isexit = 0;
+	}
+	else if (cmd->argc == 2)
+	{
+		g_status = ft_atoi(cmd->argv[1]);
+		if (g_status == 0)
+		{
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(cmd->argv[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			g_status = 2;
+		}
+	}
+	if (isexit)
+	{
+		cleanup(param);
+		exit(g_status);
+	}	
 }
 
 void	bi_env(t_param *param, int is_child)
@@ -65,7 +91,7 @@ void	bi_unset(t_command *cmd, t_param *param, int ischild)
 		if (!is_valid_identifier(arg, 0))
 		{
 			printf("minishell: unset: `%s': not a valid identifier\n", arg);
-			errno = 1;
+			g_status = 1;
 			i++;
 			continue;
 		}

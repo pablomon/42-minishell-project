@@ -36,7 +36,7 @@ void	bi_export(t_command *cmd, t_param *param, int is_child)
 		if (!is_valid_identifier(arg, 1))
 		{
 			printf("minishell: export: '%s': not a valid identifier\n", arg);
-			errno = 1;
+			g_status = 1;
 			i++;
 			continue;
 		}
@@ -94,7 +94,6 @@ char	*trim_str(char *str)
 		new = ft_strjoinchar(new, str[i]);
 		i++;
 	}
-	// free(str);
 	return (new);
 }
 
@@ -106,6 +105,7 @@ int	bi_echo(t_command *cmd, int ischild)
 	char	*tmp;
 	char	*trimmed;
 
+	g_status = 0;
 	if (!ischild)
 		return (0);
 	out = ft_strdup("");
