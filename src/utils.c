@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/20 13:05:08 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 21:33:53 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	check_str(char *str, char *cmd, t_param *param)
 {
 	if (access(str, F_OK) != 0 || access(str, X_OK) != 0)
 	{
-		my_perror(param, NOCMD, cmd, 127);
+		my_perror(NOCMD, cmd, 127);
 		cleanup(param);
 		exit (g_status);
 	}

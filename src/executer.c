@@ -98,7 +98,7 @@ int	open_redirections(t_command *cmd, t_param *param, t_list *fileout_lst)
 				if (access(fo->file, F_OK) == 0 && access(fo->file, W_OK) == -1)
 				{
 					g_status = 1;
-					my_perror(param, NOPERM, fo->file, 1);
+					my_perror(NOPERM, fo->file, 1);
 					return (g_status);
 				}
 				else
@@ -109,7 +109,7 @@ int	open_redirections(t_command *cmd, t_param *param, t_list *fileout_lst)
 				if (access(fo->file, F_OK) == 0 && access(fo->file, R_OK) != 0)
 				{
 					g_status = 1;
-					my_perror(param, NOPERM, fo->file, 1);
+					my_perror(NOPERM, fo->file, 1);
 					return (g_status);
 				}
 				else
@@ -200,7 +200,7 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 
 	if (DEBUG)
 		printf("\nLIST EXECUTER----\n");
-	g_status = 0;
+	// g_status = 0;
 	/* set the initial input */
 	i = 0;
 	param->default_in = dup(STDIN_FILENO);
@@ -229,20 +229,20 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 		pid = fork();
 		if (pid < 0)
 		{
-			my_perror(param, FORK_ERR, NULL, 1);
+			my_perror(FORK_ERR, NULL, 1);
 			g_status = 1;
 			return (g_status);
 		}
 		if (pid == 0)
 			execute_child(cmd, param, i, fds);
 		reg_parent_signals();
+		// cierra pipes
 		waitpid(pid, &status, 0);
+		close(fds[WRITE_END]);
+		close(fds[READ_END]);
 		//TODO: si es directorio soltar printf("%s: Is a directory"), i++, continue
 		// param->fd_in -> pipe read
 		dup2(fds[READ_END], param->fd_in);
-		// cierra pipes
-		close(fds[WRITE_END]);
-		close(fds[READ_END]);
 		if (DEBUG)
 			printf("Execute bis in parent:\n");
 		g_status = status % 255;

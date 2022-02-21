@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/20 23:11:21 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:11:38 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct  s_param
 	char		*prompt;
 	t_list		*tkn_lst;
 	t_list		*cmd_lst;
+	int			syntx_err;
 
 }               t_param;
 
@@ -140,9 +141,10 @@ typedef struct s_tokenizer
 #define MEM_ERR 14
 #define IS_DIR 15
 #define NOT_DIR 16
+#define SYNTAX_ERR 17
+long long int				g_status;
+void	*my_perror(int err_type, char *str, int errnum);
 
-int				g_status;
-void	*my_perror(t_param *param, int err_type, char *str, int errnum);
 
 /* Shell functions*/
 int         myshell_loop(t_param *param, char **av);

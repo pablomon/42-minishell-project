@@ -6,16 +6,31 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 14:32:50 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:15:02 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 
+void	init_param2(t_param *param, char **env, char *cwd)
+{
+	int	i;
+	t_keyval	*keyval;
+
+	i = 0;
+	while (env[i] != NULL)
+	{
+		keyval = get_keyval(env[i]);
+		set_env_var(keyval, param);
+		i++;
+	}
+	if (!mygetenv("PATH", param))
+		my_setenv("PATH", cwd, param);
+	free(cwd);
+}
 void	init_param(t_param *param, char **env, char *cwd)
 {
 	int			i;
-	t_keyval	*keyval;
 	char 		*str;
 
  	param->line				= NULL;
@@ -27,19 +42,11 @@ void	init_param(t_param *param, char **env, char *cwd)
 	param->envc				= 0;
 	param->envvalc			= 0;
 	param->env				= NULL;
-	i = 0;
-	while (env[i] != NULL)
-	{
-		keyval = get_keyval(env[i]);
-		set_env_var(keyval, param);
-		i++;
-	}
-	if (!mygetenv("PATH", param))
-		my_setenv("PATH", cwd, param);
-	free(cwd);
+	param->syntx_err		= 0;
 	param->tkn_lst = NULL;
 	param->cmd_lst = NULL;
 	param->prompt = NULL;
+	init_param2(param, env, cwd);
 }
 
 /**

@@ -1,6 +1,5 @@
 #include "../inc/myshell.h"
 
-
 void	bi_exit_child(t_command *cmd, t_param *param, int cmd_num)
 {
 	if (param->cmdc == 1)

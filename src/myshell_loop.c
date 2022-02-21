@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 14:33:14 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:22:14 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,10 @@ int	get_cmd(t_param *param)
 
 int myshell_loop(t_param *param, char *av[])
 {
-	int		interactive;
-	int		process_status;
-	int		read;
-	t_token     *tokens;
-	t_command   **commands;
-	t_list	*cmdlst;
-	t_list	*tknlst;
+	// int		interactive;
+	int			read;
+	t_token		*tokens;
+	t_command	**commands;
 
 	/* 
 	interactive = 1;
@@ -69,7 +66,6 @@ int myshell_loop(t_param *param, char *av[])
 		interactive = 0; 
 	*/
 
-	process_status = 0;
 	while (1)
 	{
 		read = get_cmd(param);
@@ -82,8 +78,12 @@ int myshell_loop(t_param *param, char *av[])
 		{
 			param->tkn_lst = get_tokens(param->line, param);
 			param->cmd_lst = parser(param->tkn_lst, param);
-			expand_tokens(param->tkn_lst, param);
-			g_status = cmd_execute(param->cmd_lst, param);
+			if (!param->syntx_err)
+			{
+				expand_tokens(param->tkn_lst, param);
+				g_status = cmd_execute(param->cmd_lst, param);
+			}
+			param->syntx_err = 0;
 			free_tokens(param->tkn_lst);
 			param->tkn_lst = NULL;
 			free_commands(param->cmd_lst);

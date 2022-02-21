@@ -6,13 +6,13 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 21:14:04 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/20 17:47:18 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 21:25:27 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 
-void	*my_perror(t_param *param, int err_type, char *str, int errnum)
+void	*my_perror(int err_type, char *str, int errnum)
 {
 	g_status = errnum;
 	if (err_type == NOQUOTE)
@@ -35,6 +35,8 @@ void	*my_perror(t_param *param, int err_type, char *str, int errnum)
 		ft_putstr_fd("minishell: Is a directory: ", 2);
 	else if (err_type == NOT_DIR)
 		ft_putstr_fd("minishell: Not a directory: ", 2);
+	else if (err_type == SYNTAX_ERR)
+		ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
 	ft_putendl_fd(str, 2);
 	return (NULL);
 }

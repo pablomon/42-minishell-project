@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/21 14:41:13 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 22:23:23 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,7 @@ int	parse_redir(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 	if (ot == OT_ORED || ot == OT_IRED || ot == OT_ORED2 || ot == OT_HEREDOC)
 	{
 		if (nxt->type != TT_WORD)
-		{
-			if (DEBUG)
-				printf("syntax error: unexpected token near `%s\'\n", tkn->cnt);
 			return (EXIT_FAILURE);
-		}
 		if (ot == OT_ORED || ot == OT_ORED2)
 			add_fileout(cmd, nxt, ot);
 		if (ot == OT_ORED2)
@@ -51,7 +47,7 @@ int	do_token(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 {
 	if (tkn->op_type == OT_PIPE && cmd->name == NULL)
 	{
-		printf("syntax error: unexpected token near `%s\'\n", tkn->cnt);
+		my_perror(SYNTAX_ERR, tkn->cnt, 2);
 		return (STX_ERR);
 	}
 	if (tkn->op_type == OT_PIPE && cmd->name != NULL)
@@ -67,7 +63,7 @@ int	do_token(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 	}
 	if (parse_redir(tkn, nxt, cmd, pos))
 	{
-		printf("syntax error\n");
+		my_perror(SYNTAX_ERR, tkn->cnt, 2);
 		return (STX_ERR);
 	}
 	if (tkn->type == TT_WORD && cmd->name != NULL)
@@ -82,7 +78,7 @@ int	do_token(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 	return (0);
 }
 
-int	get_command(t_list *tokens, t_command *cmd)
+int	get_command(t_list *tokens, t_command *cmd, t_param *param)
 {
 	static int	pos = 0;
 	if (DEBUG)
@@ -94,9 +90,9 @@ int	get_command(t_list *tokens, t_command *cmd)
 	tkn = NULL;
 	nxt = NULL;
 	// if (ft_lstat(tokens, pos))
-	tkn = (t_token*)(ft_lstat(tokens, pos)->content);
+		tkn = (t_token*)(ft_lstat(tokens, pos)->content);
 	// if (ft_lstat(tokens, pos + 1))
-	nxt = (t_token*)(ft_lstat(tokens, pos + 1)->content);
+		nxt = (t_token*)(ft_lstat(tokens, pos + 1)->content);
 	if (DEBUG)
 	{
 		if (tkn && tkn->type != TT_EOF)
@@ -108,13 +104,16 @@ int	get_command(t_list *tokens, t_command *cmd)
 	{
 		res = do_token(tkn, nxt, cmd, &pos);
 		if (res == STX_ERR)
+		{
+			pos = 0;
+			param->syntx_err = 1;
 			return (0);
+		}
 		if (res == CMD_CPT)
 			return (1);
 		pos++;
 		tkn = NULL;
 		nxt = NULL;
-
 		tkn = (t_token*)(ft_lstat(tokens, pos)->content);
 		if (ft_lstat(tokens, pos + 1))
 			nxt = (t_token*)(ft_lstat(tokens, pos + 1)->content);
@@ -142,7 +141,7 @@ t_list	*parser(t_list *tknlst, t_param *param)
 	cmd = new_command(max_args);
 	cmd_lst = ft_lstnew(cmd);
 	tmp = cmd_lst;
-	while (get_command(tknlst, (t_command*)tmp->content))
+	while (get_command(tknlst, (t_command*)tmp->content, param))
 	{
 		cmd = new_command(max_args);
 		ft_lstadd_back(&cmd_lst, ft_lstnew(cmd));

@@ -25,9 +25,11 @@ void	print_cmd(t_command *cmd)
 	t_token	*t;
 	t_list	*lst;
 
-	
+	ft_putstr(".....");
 	t = (t_token*)(cmd->arglst->content);
-	printf("name	= %s\n" ,t->cnt);
+	ft_putstr("xxxx");
+	ft_putstr("name ");
+	ft_putendl_fd(t->cnt, 1);
 	printf("argc	= %d\n" ,cmd->argc);
 	lst = cmd->arglst;
 	i = 0;

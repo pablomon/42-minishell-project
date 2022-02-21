@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/08 17:05:42 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/10 20:51:48 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:21:19 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int					ft_isprint(int c);
 int					ft_isascii(int c);
 int					ft_isalnum(int c);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
-int					ft_atoi(const char *str);
+long long int		ft_atoi(const char *str);
 int					ft_tolower(int c);
 int					ft_toupper(int c);
 void				*ft_calloc(size_t count, size_t size);
