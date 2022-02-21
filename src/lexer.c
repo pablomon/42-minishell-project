@@ -11,9 +11,7 @@ int	is_op(char c)
 int	delimit_tkn(t_tokenizer *d, t_token *tkn)
 {
 	if (DEBUG)
-	{
 		printf("Delimiting token\n");
-	}
 	tkn->cnt = d->cnt;
 	// tkn->cnt[d->tpos] = 0;
 	if (tkn->type != TT_OP)

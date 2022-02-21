@@ -27,8 +27,9 @@ t_command	*new_command(int max_args)
 
 	cmd = (t_command*)malloc(sizeof(t_command));
 	cmd->argc		= 0;
-	cmd->argv		= (char**)(malloc(sizeof(char*)));
+	cmd->argv		= (char**)(malloc(sizeof(char*) * 2));
 	cmd->argv[0]	= NULL;
+	cmd->argv[1]	= NULL;
 	cmd->is_assignment = 0;
 	cmd->name		= NULL;
 	cmd->filein		= NULL;

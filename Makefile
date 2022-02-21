@@ -10,8 +10,8 @@ NAME		= 	minishell
 CC			=	gcc
 
 RL_FLAG		=	-L/Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include
-SAN_FLAG	=	-fsanitize=address -fdiagnostics-color=always
-DEBUG_FLAG	=	-g3# -O0
+SAN_FLAG	=	#-fsanitize=address -fdiagnostics-color=always
+DEBUG_FLAG	=	#-g3# -O0
 
 FLAG		=	$(RL_FLAG) $(SAN_FLAG) $(DEBUG_FLAG) -Wall -Werror -Wextra -I. -L/usr/include -lreadline -o $(NAME)
 

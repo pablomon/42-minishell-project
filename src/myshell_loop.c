@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/20 13:10:25 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 14:33:14 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,16 @@ int myshell_loop(t_param *param, char *av[])
 	while (1)
 	{
 		read = get_cmd(param);
-		// exit condition
 		if (read == EOF)
 		{
 			write(STDIN_FILENO, "\n", 1);
 			return (0);
 		}
-		// si la linea tiene contenido
 		if (read)
 		{
 			param->tkn_lst = get_tokens(param->line, param);
 			param->cmd_lst = parser(param->tkn_lst, param);
 			expand_tokens(param->tkn_lst, param);
-			
 			g_status = cmd_execute(param->cmd_lst, param);
 			free_tokens(param->tkn_lst);
 			param->tkn_lst = NULL;
@@ -94,6 +91,5 @@ int myshell_loop(t_param *param, char *av[])
 		}
 		free(param->line);
 	}
-//	close(param->fd);
 	return (g_status);
 }

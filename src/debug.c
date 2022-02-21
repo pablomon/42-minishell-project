@@ -31,6 +31,7 @@ void	print_cmd(t_command *cmd)
 	printf("argc	= %d\n" ,cmd->argc);
 	lst = cmd->arglst;
 	i = 0;
+	printf("args en tokens:\n");
 	while (lst)
 	{
 		ft_putstr("argv[");
@@ -41,6 +42,13 @@ void	print_cmd(t_command *cmd)
 		t = (t_token*)(lst->content);
 		printf("%s\n" , t->cnt);
 		lst = lst->next;
+		i++;
+	}
+	i = 0;
+	printf("args en array:\n");
+	while (cmd->argv[i])
+	{
+		printf("argv[%d] = '%s'\n", i, cmd->argv[i]);
 		i++;
 	}
 	if (cmd->fileintkn)
@@ -66,47 +74,15 @@ void	print_cmd(t_command *cmd)
 	printf("\n");
 }
 
-void	print_cmd2(t_command *cmd)
-{
-	int	i;
-
-	i = 0;
-	printf("name	= %s\n" ,cmd->name);
-	printf("argc	= %d\n" ,cmd->argc);
-	while (i < cmd->argc)
-	{
-		printf("argv[%d]	= %s\n" ,i, cmd->argv[i]);
-		i++;
-	}
-	printf("in	= %s\n", cmd->filein);
-	printf("append	= %d\n", cmd->append);
-	printf("fileoutc	= %d\n", cmd->fileoutc);
-	t_list *lst;
-	lst = cmd->fileouts;
-	i = 0;
-	while (i < cmd->fileoutc)
-	{
-		t_fileout *cnt;
-		cnt = (t_fileout*)lst->content;
-		printf("fileout[%d]	= \"%s\", append = %d\n", i, cnt->file, cnt->append);
-		if (lst->next)
-			lst = lst->next;
-		i++;
-	}
-	printf("out	= %s\n", cmd->lastfileout);
-	printf("heredoc word	= %s\n", cmd->hdocword);
-	printf("is piped = %d\n", cmd->piped);
-	printf("\n");
-}
-
 void	print_arr(char **arr)
 {
+	printf("print_arr:\n");
 	int i;
 
 	i = 0;
 	while (arr[i])
 	{
-		ft_putstr(arr[i]);
+		ft_putendl_fd(arr[i], 1);
 		i++;
 	}
 }

@@ -8,9 +8,8 @@
 int	try_bis(t_command *cmd, t_param *param, int ischild, int cmd_num)
 {
 	int	ret;
-
+	
 	ret = 1;
-		
 	if (!ft_strcmp(cmd->name, "env"))
 		bi_env(param, ischild);
 	else if (!ft_strcmp(cmd->name, "export"))
@@ -135,6 +134,8 @@ void	update_command_args(t_command *c, t_param *param)
 	while (tmp)
 	{
 		c->argv[i] = ((t_token*)(tmp->content))->cnt;
+		if (DEBUG)
+			printf("Argv[%d] updated to '%s'\n", i, c->argv[i]);
 		i++;
 		tmp = tmp->next;
 	}
@@ -155,6 +156,8 @@ void	update_command_args(t_command *c, t_param *param)
 
 void	execute_child(t_command *cmd, t_param *param, int cmd_num, int *fds)
 {	
+	if (DEBUG)
+		printf("Execute child:\n");
 	char	**envp;
 	char	*file;
 
@@ -203,6 +206,8 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 	param->default_in = dup(STDIN_FILENO);
 	param->default_out = dup(STDOUT_FILENO);
 	param->fd_in = STDIN_FILENO;
+	if (DEBUG)
+		printf("cmd_execute:\n");
 	while (cmd_list)
 	{
 		cmd = (t_command *)cmd_list->content;
@@ -212,15 +217,8 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 			printf("Executing command %d:\n", i);
 			print_cmd(cmd);
 		}
-		// haz redirecciones
-		if (open_redirections(cmd, param, cmd->fileouts))
-		{
-			i++;
-			cmd_list = cmd_list->next;
-			continue;
-		}
-		// si solo son redirecciones continua
-		if (!cmd->argv[0])
+		// haz redirecciones. Si solo son redirecciones continua
+		if (open_redirections(cmd, param, cmd->fileouts) || !cmd->argv[0])
 		{
 			i++;
 			cmd_list = cmd_list->next;
@@ -237,15 +235,16 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 		}
 		if (pid == 0)
 			execute_child(cmd, param, i, fds);
-
 		reg_parent_signals();
+		waitpid(pid, &status, 0);
 		//TODO: si es directorio soltar printf("%s: Is a directory"), i++, continue
 		// param->fd_in -> pipe read
 		dup2(fds[READ_END], param->fd_in);
 		// cierra pipes
 		close(fds[WRITE_END]);
 		close(fds[READ_END]);
-		waitpid(pid, &status, 0);
+		if (DEBUG)
+			printf("Execute bis in parent:\n");
 		g_status = status % 255;
 		if (status == 2)
 			g_status = 130;

@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/20 13:05:55 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 14:41:13 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #define DEBUG 0
 #define STX_ERR 1
 #define CMD_CPT 2
-
-
 
 int	parse_redir(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 {
@@ -116,8 +114,8 @@ int	get_command(t_list *tokens, t_command *cmd)
 		pos++;
 		tkn = NULL;
 		nxt = NULL;
-		// if (ft_lstat(tokens, pos))
-			tkn = (t_token*)(ft_lstat(tokens, pos)->content);
+
+		tkn = (t_token*)(ft_lstat(tokens, pos)->content);
 		if (ft_lstat(tokens, pos + 1))
 			nxt = (t_token*)(ft_lstat(tokens, pos + 1)->content);
 	}

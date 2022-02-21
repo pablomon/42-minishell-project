@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/19 12:42:05 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/21 14:32:50 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	init_param(t_param *param, char **env, char *cwd)
 	param->envc				= 0;
 	param->envvalc			= 0;
 	param->env				= NULL;
-	// copiamos el environment
 	i = 0;
 	while (env[i] != NULL)
 	{
@@ -128,7 +127,15 @@ int main(int ac, char *av[], char **env)
 	/* Minishell tester */
 	if (ac > 1 && ft_strlen(av[1]) == 2 && av[1][0] == '-' && av[1][1] == 'c')
 	{
-		param->tkn_lst = get_tokens(av[2], param);
+		int i = 2;
+		char *line = av[2];
+		char *tmp;
+		while (av[++i])
+		{
+			line = ft_strjoin(line, ft_strdup(" "));
+			line = ft_strjoin(line, av[i]);
+		}
+		param->tkn_lst = get_tokens(line, param);
 		param->cmd_lst = parser(param->tkn_lst, param);
 		expand_tokens(param->tkn_lst, param);
 		cmd_execute(param->cmd_lst, param);
