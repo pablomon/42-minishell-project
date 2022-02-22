@@ -7,7 +7,6 @@ void	parent_hdl(int signum)
 	rl_on_new_line();
 	ft_putstr("\n");
 	rl_redisplay();
-	//set status a 130?
 }
 
 void	child_hdl(int signum)
@@ -15,7 +14,6 @@ void	child_hdl(int signum)
 
 	if (signum == SIGQUIT)
 		ft_putstr_fd("Quit: 3\n", 2);
-		//set status a 131?
 }
 
 void	reg_parent_signals()

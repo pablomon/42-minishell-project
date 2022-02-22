@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/22 14:40:48 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 21:57:05 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	increment_shlvl(t_param *param)
 }
 
 void	update_prompt(t_param *param)
-{	
+{
 	char		*logname;
 	char		*pwd;
 	char		*tmp;
@@ -131,7 +131,7 @@ int main(int ac, char *av[], char **env)
 	disable_ctrl_c_hotkey();
 	reg_parent_signals();
 	update_prompt(param);
-	
+
 	/* Minishell tester */
 	if (ac > 1 && ft_strlen(av[1]) == 2 && av[1][0] == '-' && av[1][1] == 'c')
 	{
@@ -158,5 +158,6 @@ int main(int ac, char *av[], char **env)
 
 	status = myshell_loop(param, av);
 	cleanup(param);
+	system("leaks minishell");
 	return (status);
 }

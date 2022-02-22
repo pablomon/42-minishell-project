@@ -90,7 +90,7 @@ char	*trim_str(char *str)
 		rgt--;
 	i = lft;
 	while (i <= rgt)
-	{	
+	{
 		new = ft_strjoinchar(new, str[i]);
 		i++;
 	}
@@ -105,6 +105,7 @@ int	bi_echo(t_command *cmd, int ischild)
 	char	*tmp;
 	char	*trimmed;
 
+	print_arr(cmd->argv);
 	g_status = 0;
 	if (!ischild)
 		return (0);

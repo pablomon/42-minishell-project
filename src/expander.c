@@ -2,7 +2,7 @@
 
 #define DEBUG 0
 
-/* returns the first expansion possible 
+/* returns the first expansion possible
 or $ if not expansion possible */
 char	*expand2(char *str, int *read, t_param *param)
 {
@@ -50,7 +50,7 @@ char	*the_expanse(char *str, t_param *param)
 	int		h;
 	char	*tmp;
 	char	*res;
-	
+
 	expanded = ft_strdup("");
 	i = 0;
 	while (str[i])
@@ -82,7 +82,7 @@ void	expand_tokens(t_list *tkn_lst, t_param *param)
 	t_list	*tmp;
 	t_token	*t;
 	char	*expanded;
-	
+
 	i = 0;
 	tmp = tkn_lst;
 	while (tmp)

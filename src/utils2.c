@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/30 12:38:17 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/19 15:31:17 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:35:44 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	emptyfunc(void *v) { };
 /* returns true if c is alpha or underscore */
 int		isvalidchar4var(char c, int is_start)
 {
-	if (is_start && (isalpha(c) || c == '_'))
+	if (is_start && (ft_isalpha(c) || c == '_'))
 			return (1);
-	if (!is_start && (isalnum(c) || c == '_'))
+	if (!is_start && (ft_isalnum(c) || c == '_'))
 			return (1);
 	return (0);
 }

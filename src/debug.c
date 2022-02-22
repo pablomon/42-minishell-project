@@ -25,9 +25,7 @@ void	print_cmd(t_command *cmd)
 	t_token	*t;
 	t_list	*lst;
 
-	ft_putstr(".....");
 	t = (t_token*)(cmd->arglst->content);
-	ft_putstr("xxxx");
 	ft_putstr("name ");
 	ft_putendl_fd(t->cnt, 1);
 	printf("argc	= %d\n" ,cmd->argc);
@@ -42,7 +40,7 @@ void	print_cmd(t_command *cmd)
 		if (lst->content == NULL)
 			break;
 		t = (t_token*)(lst->content);
-		printf("%s\n" , t->cnt);
+		printf("'%s'\n" , t->cnt);
 		lst = lst->next;
 		i++;
 	}
@@ -54,7 +52,7 @@ void	print_cmd(t_command *cmd)
 		i++;
 	}
 	if (cmd->fileintkn)
-		printf("in	= %s\n", cmd->fileintkn->cnt);
+		printf("in	= '%s'\n", cmd->fileintkn->cnt);
 	printf("append	= %d\n", cmd->append);
 	printf("fileoutc	= %d\n", cmd->fileoutc);
 	lst = cmd->fileouts;
@@ -63,15 +61,15 @@ void	print_cmd(t_command *cmd)
 	{
 		t_fileout *cnt;
 		cnt = (t_fileout*)lst->content;
-		printf("fileout[%d]	= \"%s\", append = %d\n", i, cnt->filetkn->cnt, cnt->append);
+		printf("fileout[%d]	= \"'%s'\", append = %d\n", i, cnt->filetkn->cnt, cnt->append);
 		if (lst->next)
 			lst = lst->next;
 		i++;
 	}
 	if (cmd->lastfileouttkn)
-		printf("out	= %s\n", cmd->lastfileouttkn->cnt);
+		printf("out	= '%s'\n", cmd->lastfileouttkn->cnt);
 	if (cmd->hdocword)
-		printf("heredoc word	= %s\n", cmd->hdoctkn->cnt);
+		printf("heredoc word	= '%s'\n", cmd->hdoctkn->cnt);
 	printf("is piped = %d\n", cmd->piped);
 	printf("\n");
 }
@@ -84,7 +82,7 @@ void	print_arr(char **arr)
 	i = 0;
 	while (arr[i])
 	{
-		ft_putendl_fd(arr[i], 1);
+		printf("arr[%d] = '%s'\n", i , arr[i]);
 		i++;
 	}
 }

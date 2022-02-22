@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell_loop.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 22:22:14 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:42:23 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ int myshell_loop(t_param *param, char *av[])
 	t_token		*tokens;
 	t_command	**commands;
 
-	/* 
+	/*
 	interactive = 1;
 	if (isatty(STDIN_FILENO) == 0)
-		interactive = 0; 
+		interactive = 0;
 	*/
 
 	while (1)
@@ -90,6 +90,7 @@ int myshell_loop(t_param *param, char *av[])
 			param->cmd_lst = NULL;
 		}
 		free(param->line);
+		param->line = NULL;
 	}
 	return (g_status);
 }

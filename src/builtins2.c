@@ -18,7 +18,7 @@ void	bi_exit_child(t_command *cmd, t_param *param, int cmd_num)
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(cmd->argv[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
-			g_status = 2;
+			g_status = 255;
 		}
 	}
 }
@@ -49,14 +49,14 @@ void	bi_exit_parent(t_command *cmd, t_param *param, int cmd_num)
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(cmd->argv[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
-			g_status = 2;
+			g_status = 255;
 		}
 	}
 	if (isexit)
 	{
 		cleanup(param);
 		exit(g_status);
-	}	
+	}
 }
 
 void	bi_env(t_param *param, int is_child)

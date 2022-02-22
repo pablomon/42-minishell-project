@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/22 15:05:28 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 20:25:36 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ char	*rl_gets(t_param *param)
 	 * Get a line from the user.
 	 */
 
-	ft_putstr_fd(param->prompt, 2);
-	line_read = readline(NULL);
+	// ft_putstr_fd(param->prompt, 2);
+	line_read = readline(param->prompt);
 	/*
 	 * If the line has any text in it, save it on the history.
 	 */

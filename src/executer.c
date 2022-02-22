@@ -8,7 +8,7 @@
 int	try_bis(t_command *cmd, t_param *param, int ischild, int cmd_num)
 {
 	int	ret;
-	
+
 	ret = 1;
 	if (!ft_strcmp(cmd->name, "env"))
 		bi_env(param, ischild);
@@ -92,6 +92,7 @@ int	open_redirections(t_command *cmd, t_param *param, t_list *fileout_lst)
 		{
 			fo = (t_fileout*)fileout_lst->content;
 			if (check_ambiguous_redir(fo->file))
+			//TODO: pasar a myperrror
 				return (1); // aquí no es g_status?
 			if (fo->append)
 			{
@@ -128,7 +129,7 @@ void	update_command_args(t_command *c, t_param *param)
 	t_list		*tmp;
 	int			i;
 	t_fileout	*fo;
-	
+
 	i = 0;
 	tmp = c->arglst;
 	while (tmp)
@@ -155,7 +156,7 @@ void	update_command_args(t_command *c, t_param *param)
 }
 
 void	execute_child(t_command *cmd, t_param *param, int cmd_num, int *fds)
-{	
+{
 	if (DEBUG)
 		printf("Execute child:\n");
 	char	**envp;
@@ -177,6 +178,8 @@ void	execute_child(t_command *cmd, t_param *param, int cmd_num, int *fds)
 	// ejecuta el comando:
 	envp = make_envp(param);
 	file = find_path(cmd->argv[0], envp);
+	if (DEBUG)
+		printf("child: file = %s\n", file);
 	if (!try_bis(cmd, param, 1, cmd_num))
 	{
 		if (ft_strcmp(cmd->argv[0], "exit") == 0)
@@ -224,8 +227,8 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 			cmd_list = cmd_list->next;
 			continue;
 		}
-		reg_child_signals();
 		pipe(fds);
+		reg_child_signals();
 		pid = fork();
 		if (pid < 0)
 		{
@@ -233,16 +236,17 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 			g_status = 1;
 			return (g_status);
 		}
-		if (pid == 0)
+		if (pid == 0){
 			execute_child(cmd, param, i, fds);
-		reg_parent_signals();
+		}
 		// cierra pipes
 		waitpid(pid, &status, 0);
+		reg_parent_signals();
+		dup2(fds[READ_END], param->fd_in);
 		close(fds[WRITE_END]);
 		close(fds[READ_END]);
 		//TODO: si es directorio soltar printf("%s: Is a directory"), i++, continue
 		// param->fd_in -> pipe read
-		dup2(fds[READ_END], param->fd_in);
 		if (DEBUG)
 			printf("Execute bis in parent:\n");
 		g_status = status % 255;
@@ -263,5 +267,6 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 	dup2(param->default_out, STDOUT_FILENO);
 	close(param->default_in);
 	close(param->default_out);
+	system("leaks minishell");
 	return (g_status);
 }
