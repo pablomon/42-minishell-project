@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 22:15:02 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 14:40:48 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	init_param2(t_param *param, char **env, char *cwd)
 		my_setenv("PATH", cwd, param);
 	free(cwd);
 }
+
 void	init_param(t_param *param, char **env, char *cwd)
 {
 	int			i;
@@ -134,6 +135,7 @@ int main(int ac, char *av[], char **env)
 	/* Minishell tester */
 	if (ac > 1 && ft_strlen(av[1]) == 2 && av[1][0] == '-' && av[1][1] == 'c')
 	{
+		print_arr(av);
 		int i = 2;
 		char *line = av[2];
 		char *tmp;

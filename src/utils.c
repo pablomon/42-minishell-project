@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 21:33:53 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 15:05:28 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ char	*rl_gets(t_param *param)
 	 * Get a line from the user.
 	 */
 
-	line_read = readline (param->prompt);
-
+	ft_putstr_fd(param->prompt, 2);
+	line_read = readline(NULL);
 	/*
 	 * If the line has any text in it, save it on the history.
 	 */
