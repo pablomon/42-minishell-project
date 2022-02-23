@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:01:06 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/23 18:43:36 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 21:53:06 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*do_echo(t_list	*lst)
 		if (lst->next)
 		{
 			t1 = (t_token *)lst->next->content;
-			if (t1->cnt && (ft_strlen(t1->cnt) != 0))
+			if (t1->cnt && ft_strlen(t1->cnt) != 0 && t->spaced)
 				out = ft_strjoinchar(out, ' ');
 		}
 		lst = lst->next;

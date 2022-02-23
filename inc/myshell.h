@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/23 19:00:51 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 23:39:28 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_token
 	int		delimited;
 	int		expandable;
 	int		quoted;
+	int		spaced;
 }			t_token;
 
 typedef struct s_fileout
@@ -162,6 +163,7 @@ void		cleanup(t_param *param);
 # define TT_OP 1
 # define TT_WORD 2
 # define TT_EOF 3
+# define TT_EMPTYQUOTED 4
  
 # define NOQUOTE 0
 # define SQUOTE 1
@@ -175,7 +177,7 @@ void		cleanup(t_param *param);
 # define OT_NEWLINE 6
 
 t_list		*get_tokens(char *input, t_param *param);
-void		init_tokenizer_struct(t_tokenizer *d, int heredoc, int pos, char *str);
+void		init_tokenizer_struct(t_tokenizer *d, int heredoc, int pos, char *str, int quoted);
 void		tokenize(t_tokenizer *d, t_token *token, t_param *param);
 int			delim_op_rules(t_tokenizer *data, t_token *token, char *str);
 int			quote_rules(t_tokenizer *data, t_token *token, char *str);

@@ -7,7 +7,8 @@ void	print_tkn(t_token *tkn)
 		printf("type = word, ");
 		printf("expandable = %d, ", tkn->expandable);
 		printf("quoted = %d, ", tkn->quoted);
-		printf("content = %s\n", tkn->cnt);
+		printf("spaced = %d, ", tkn->spaced);
+		printf("content = '%s'\n", tkn->cnt);
 	}
 	if (tkn->type == TT_OP)
 	{

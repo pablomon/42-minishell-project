@@ -6,42 +6,53 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 08:09:24 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/23 19:44:21 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:20:20 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 #define DEBUG 0
 
-void	init_tokenizer_struct(t_tokenizer *d, int heredoc, int pos, char *str)
+void	init_tokenizer_struct(t_tokenizer *d, int heredoc, int pos, char *str, int quoted)
 {
 	d->cnt = NULL;
 	d->prev = 0;
-	d->quoted = NOQUOTE;
 	d->tpos = 0;
 	d->spos = pos;
 	d->heredoc = heredoc;
 	d->str = str;
+	d->quoted = quoted;
 }
 
 /* Implements token rules */
-int	token_rules(t_tokenizer *data, t_token *token, char *str)
+int	token_rules(t_tokenizer *d, t_token *token, char *str)
 {
 	int	res;
 
 	res = 0;
-	if (delim_op_rules(data, token, str) == RET)
+	if (delim_op_rules(d, token, str) == RET)
 		return (1);
-	if (quote_rules(data, token, str) == SKIP)
+	if (DEBUG)
+		printf("quoterule: quoted = %d\n", d->quoted);
+	res = quote_rules(d, token, str);
+	if (res == SKIP)
 		return (0);
-	if (mark_exp_rules(data, token, str) == SKIP)
+	if (res == RET)
+	{
+		if (DEBUG)
+			printf("returning\n");
+		return (1);
+	}
+	if (mark_exp_rules(d, token, str) == SKIP)
 		return (0);
-	res = newop_rules(data, token, str);
+	res = newop_rules(d, token, str);
 	if (res == RET)
 		return (1);
 	if (res == SKIP)
 		return (0);
-	if (word_rules(data, token, str) == RET)
+	if (DEBUG)
+		printf("wordrule: quoted = %d\n", d->quoted);
+	if (word_rules(d, token, str) == RET)
 		return (1);
 	return (0);
 }

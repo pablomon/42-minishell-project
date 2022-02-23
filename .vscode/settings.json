@@ -1,0 +1,14 @@
+{
+	"workbench.colorCustomizations": {
+		"[Ayu Dark Bordered]": {
+			"editor.background": "#000000",
+			"sideBar.background": "#000000",
+			"editor.selectionHighlightBackground": "#410000",
+			"editor.selectionHighlightBorder": "#ffc400",
+			"sideBar.foreground": "#fcfcfcc4"
+		},
+		"activityBar.background": "#20330C",
+		"titleBar.activeBackground": "#2D4711",
+		"titleBar.activeForeground": "#F7FCF2"
+	}
+}

@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:53:57 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/23 18:54:40 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:22:38 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	is_op(char c)
 
 int	delimit_tkn(t_tokenizer *d, t_token *tkn)
 {
+	if (DEBUG)
+		ft_putendl_fd("Delimiting token",1 );
 	tkn->cnt = d->cnt;
 	if (tkn->type != TT_OP)
 		return (1);
@@ -43,26 +45,24 @@ int	delimit_tkn(t_tokenizer *d, t_token *tkn)
 int	put_token(char *str, t_token *token, t_param *param)
 {
 	static t_tokenizer	d;
-	static int			heredoc = 0;
-	static int			pos = 0;
+	if (DEBUG)
+		printf("put token: spos = %d, quoted = %d, c = '%c'\n", d.spos, d.quoted, str[d.spos]);
 
-	init_tokenizer_struct(&d, heredoc, pos, str);
+	init_tokenizer_struct(&d, d.heredoc, d.spos, str, d.quoted);
 	tokenize(&d, token, param);
-	pos = d.spos;
-	heredoc = d.heredoc;
+
 	if (token->type == TT_EMPTY)
 	{
 		token->type = TT_EOF;
-		heredoc = 0;
-		pos = 0;
+		d.heredoc = 0;
+		d.spos = 0;
+		d.quoted = 0;
 		free (d.cnt);
 		return (0);
 	}
 	else
 	{
 		delimit_tkn(&d, token);
-		heredoc = d.heredoc;
-		pos = d.spos;
 		return (1);
 	}
 }
@@ -77,13 +77,13 @@ t_token	*new_token(void)
 	t->op_type = 0;
 	t->expandable = 0;
 	t->quoted = 0;
+	t->spaced = 0;
 	return (t);
 }
 
 t_list	*get_tokens(char *input, t_param *param)
 {
 	t_token	*tokens;
-	int		i;
 	t_list	*tkn_lst;
 	t_list	*tmp;
 	t_token	*t;
@@ -92,6 +92,13 @@ t_list	*get_tokens(char *input, t_param *param)
 	tmp = tkn_lst;
 	while (put_token(input, tmp->content, param))
 	{
+		t = (t_token*)tmp->content;
+		if (DEBUG)
+		{
+			print_tkn(t);
+			ft_putendl_fd("", 1);
+		}
+
 		ft_lstadd_back(&tkn_lst, ft_lstnew(new_token()));
 		tmp = tmp->next;
 	}
