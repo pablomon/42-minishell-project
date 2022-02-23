@@ -73,6 +73,7 @@ t_token *new_token()
 	t->type = TT_EMPTY;
 	t->op_type = 0;
 	t->expandable = 0;
+	t->quoted = 0;
 
 	return (t);
 }

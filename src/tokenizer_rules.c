@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 08:09:01 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/21 17:51:02 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:30:13 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,14 @@ The token shall not be delimited by the end of the quoted field. */
 			if (DEBUG)
 				printf("Single Quoting\n");
 			d->quoted = SQUOTE;
+			token->quoted = SQUOTE;
 		}
 		else
 		{
 			if (DEBUG)
 				printf("Double Quoting\n");
 			d->quoted = DQUOTE;
+			token->quoted = DQUOTE;
 		}
 		d->spos++;
 		return (SKIP);

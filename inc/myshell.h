@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 22:11:38 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:28:47 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct  s_param
 
 }               t_param;
 
-
 typedef struct s_token
 {
 	char*	cnt;
@@ -84,6 +83,7 @@ typedef struct s_token
 	int		op_type;
 	int		delimited;
 	int		expandable;
+	int		quoted;
 }			t_token;
 
 typedef struct s_fileout
@@ -145,7 +145,6 @@ typedef struct s_tokenizer
 long long int				g_status;
 void	*my_perror(int err_type, char *str, int errnum);
 
-
 /* Shell functions*/
 int         myshell_loop(t_param *param, char **av);
 void		update_prompt(t_param *param);
@@ -201,7 +200,6 @@ void		add_fileout(t_command *cmd, t_token *file, int operator);
 /* Executer */
 void		executer(char **env, t_token *tokens, t_command **cmd_lst);
 int		cmd_execute(t_list *cmd_list, t_param *param);
-
 
 /* Built ins*/
 int			is_valid_identifier(char *arg, int allow_equalsign);

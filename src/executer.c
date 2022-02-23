@@ -267,6 +267,6 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 	dup2(param->default_out, STDOUT_FILENO);
 	close(param->default_in);
 	close(param->default_out);
-	system("leaks minishell");
+	// system("leaks minishell");
 	return (g_status);
 }

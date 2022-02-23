@@ -10,7 +10,7 @@ NAME		= 	minishell
 CC			=	gcc
 
 RL_FLAG		=	-L/Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include
-SAN_FLAG	=	#-fsanitize=address -fdiagnostics-color=always
+SAN_FLAG	=	-fsanitize=address -fdiagnostics-color=always
 DEBUG_FLAG	=	-g3# -O0
 
 FLAG		=	$(RL_FLAG) $(SAN_FLAG) $(DEBUG_FLAG) -Wall -Werror -Wextra -I. -L/usr/include -lreadline -o $(NAME)
@@ -40,7 +40,8 @@ SOURCES_C	=	myshell.c \
 				tokenizer.c \
 				tokenizer_rules.c \
 				debug.c \
-				error.c
+				error.c \
+				echo.c
 
 SOURCES_G	=	get_next_line.c get_next_line_utils.c \
 
