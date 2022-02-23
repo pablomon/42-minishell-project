@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 08:09:24 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/17 16:01:47 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:44:21 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	token_rules(t_tokenizer *data, t_token *token, char *str)
 
 void	tokenize(t_tokenizer *d, t_token *token, t_param *param)
 {
-	while(d->str[d->spos] != 0)
+	while (d->str[d->spos] != 0)
 	{
 		if (d->heredoc)
 		{
@@ -56,29 +56,16 @@ void	tokenize(t_tokenizer *d, t_token *token, t_param *param)
 			free(d->cnt);
 			d->cnt = read_heredoc(d->str, d, token);
 			d->heredoc = 0;
-			if (DEBUG)
-			{
-				printf("returned heredoc = '%s'\n", d->cnt);
-			}
-			return;
+			return ;
 		}
 		if (token->delimited)
 		{
-			if (DEBUG)
-				printf("returning delimited token\n");
 			token->cnt = d->cnt;
-			return;
+			return ;
 		}
 		d->c = d->str[d->spos];
-		if (DEBUG)
-		{
-			printf("c = %c\n", d->c);
-			printf("Running rules..\n");
-		}
 		d->ruleres = token_rules(d, token, d->str);
-		if (DEBUG)
-			printf("End of rules\n");
 		if (d->ruleres == 1)
-			return;
+			return ;
 	}
 }

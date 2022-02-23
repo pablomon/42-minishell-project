@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/23 18:46:25 by pmontese          #+#    #+#             */
+/*   Updated: 2022/02/23 18:47:56 by pmontese         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/myshell.h"
 
 #define DEBUG 0
@@ -9,8 +21,6 @@ char	*expand2(char *str, int *read, t_param *param)
 	char	*var_name;
 	char	*ret;
 
-	if (DEBUG)
-		printf("expand2: expand '%s'\n", str);
 	if (str[0] == '?')
 	{
 		*read = *read + 1;
@@ -18,8 +28,6 @@ char	*expand2(char *str, int *read, t_param *param)
 	}
 	if (!isvalidchar4var(str[0], 1))
 	{
-		if (DEBUG)
-			printf("expand2: returning $\n");
 		return (ft_strdup("$"));
 	}
 	var_name = NULL;
@@ -28,23 +36,17 @@ char	*expand2(char *str, int *read, t_param *param)
 		var_name = ft_strjoinchar(var_name, str[*read]);
 		*read = *read + 1;
 	}
-	if (DEBUG)
-		printf("var name = %s\n", var_name);
 	ret = mygetenv(var_name, param);
 	if (ret == NULL)
 		ret = ft_strdup("");
 	else
 		ret = ft_strdup(mygetenv(var_name, param));
-	free(var_name);
-	if (DEBUG)
-		printf("expand2: res = '%s'\n", ret);
-	return(ret);
+	free (var_name);
+	return (ret);
 }
 
 char	*the_expanse(char *str, t_param *param)
 {
-	if (DEBUG)
-		printf("the_expanse: Expanding '%s'...\n", str);
 	char	*expanded;
 	int		i;
 	int		h;
@@ -64,20 +66,16 @@ char	*the_expanse(char *str, t_param *param)
 			expanded = ft_strjoin(expanded, res);
 			free(res);
 			free(tmp);
-			continue;
+			continue ;
 		}
 		expanded = ft_strjoinchar(expanded, str[i]);
 		i++;
 	}
-	if (DEBUG)
-		printf("the_expanse: result:\n'%s'\n", expanded);
 	return (expanded);
 }
 
 void	expand_tokens(t_list *tkn_lst, t_param *param)
 {
-	if (DEBUG)
-		printf("\nExpanding tokens..\n");
 	int		i;
 	t_list	*tmp;
 	t_token	*t;
@@ -87,22 +85,13 @@ void	expand_tokens(t_list *tkn_lst, t_param *param)
 	tmp = tkn_lst;
 	while (tmp)
 	{
-		t = (t_token*)(tmp->content);
+		t = (t_token *)(tmp->content);
 		if (t->expandable)
 		{
-			if (DEBUG)
-				printf("Expanding token '%s':\n", t->cnt);
 			expanded = the_expanse(t->cnt, param);
-			if (DEBUG)
-				printf("Result: '%s'\n", expanded);
 			free(t->cnt);
-			((t_token*)(tmp->content))->cnt = expanded;
-			// t->cnt = expanded;
-			if (DEBUG)
-				printf("New tkn->cnt after expansion: '%s'\n", ((t_token*)(tmp->content))->cnt);
+			((t_token *)(tmp->content))->cnt = expanded;
 		}
 		tmp = tmp->next;
 	}
-	if (DEBUG)
-		printf("\n...all tokens expanded\n");
 }

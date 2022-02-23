@@ -41,7 +41,8 @@ SOURCES_C	=	myshell.c \
 				tokenizer_rules.c \
 				debug.c \
 				error.c \
-				echo.c
+				echo.c \
+				init_params.c
 
 SOURCES_G	=	get_next_line.c get_next_line_utils.c \
 

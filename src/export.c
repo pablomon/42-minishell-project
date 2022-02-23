@@ -6,13 +6,13 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/30 12:38:17 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/12 12:13:34 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 18:50:43 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 
-/* devuelve 1 si "s1 > s2" */
+/* Returns 1 if "s1 > s2" */
 int	comparator(t_keyval *kv1, t_keyval *kv2)
 {
 	char	*s1;
@@ -34,8 +34,7 @@ int	comparator(t_keyval *kv1, t_keyval *kv2)
 		return (1);
 	if (s2[i])
 		return (0);
-	printf("!! las dos cadenas son iguales!\n");
-	return 0;
+	return (0);
 }
 
 void	order_export(t_list *first, t_param *param)
@@ -43,20 +42,20 @@ void	order_export(t_list *first, t_param *param)
 	int			i;
 	t_list		*list;
 	t_list		*tmp;
+	t_list		*tmp2;
 
 	i = 0;
 	while (i < param->envc)
 	{
 		list = first;
-		while(list->next)
+		while (list->next)
 		{
-			if (comparator((t_keyval*)(list->next->content), param->env[i]))
-				break;
+			if (comparator((t_keyval *)(list->next->content), param->env[i]))
+				break ;
 			list = list->next;
 		}
 		if (list->next)
 		{
-			t_list *tmp2;
 			tmp2 = ft_lstnew(param->env[i]);
 			tmp2->next = list->next;
 			list->next = tmp2;
@@ -67,21 +66,21 @@ void	order_export(t_list *first, t_param *param)
 	}
 }
 
-void    print_export(t_param *param)
+void	print_export(t_param *param)
 {
-    int			i;
+	int			i;
 	t_list		*first;
 	t_list		*lst;
 	t_keyval	*kv;
 
-	first = ft_lstnew(param); // esto es solo para q la lista no sea null
+	first = ft_lstnew(param);
 	order_export(first, param);
 	lst = first->next;
 	i = 0;
-    while (i < param->envc)
+	while (i < param->envc)
 	{
 		printf("declare -x ");
-		kv = (t_keyval*)(lst->content);
+		kv = (t_keyval *)(lst->content);
 		printf("%s", kv->key);
 		if (kv->val)
 			printf("=\"%s\"", kv->val);
@@ -89,5 +88,5 @@ void    print_export(t_param *param)
 		lst = lst->next;
 		i++;
 	}
-	 ft_lstclear(&first, &emptyfunc);
+	ft_lstclear(&first, &emptyfunc);
 }

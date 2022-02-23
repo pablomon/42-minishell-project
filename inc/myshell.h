@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/23 13:28:47 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:00:51 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,9 @@ long long int				g_status;
 void	*my_perror(int err_type, char *str, int errnum);
 
 /* Shell functions*/
-int         myshell_loop(t_param *param, char **av);
-void		update_prompt(t_param *param);
+void	init_param(t_param *param, char **env, char *cwd);
+void	update_prompt(t_param *param);
+int		myshell_loop(t_param *param, char **av);
 
 /* Clean up */
 void		free_tokens(t_list *tknlst);

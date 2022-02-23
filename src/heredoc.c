@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/23 18:51:09 by pmontese          #+#    #+#             */
+/*   Updated: 2022/02/23 18:51:42 by pmontese         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/myshell.h"
 #define DEBUG 0
 
@@ -11,29 +23,27 @@ char	*process_heredoc_input(char *delim)
 	line = ft_strdup("");
 	while (1)
 	{
-		free(line);
+		free (line);
 		line = readline("> ");
 		if (ft_strcmp(line, delim) == 0)
-			break;
+			break ;
 		if (ft_strcmp(heredoc, "") != 0)
 		{
 			tmp = heredoc;
 			heredoc = ft_strjoin(heredoc, "\n");
-			free(tmp);
+			free (tmp);
 		}
 		tmp = heredoc;
 		heredoc = ft_strjoin(heredoc, line);
-		free(tmp);
+		free (tmp);
 	}
-	free(line);
+	free (line);
 	heredoc = ft_strjoinchar(heredoc, '\n');
 	return (heredoc);
 }
 
 char	*read_heredoc(char *str, t_tokenizer *d, t_token *tkn)
 {
-	if (DEBUG)
-		ft_putstr("\n- Found HEREDOC -\n");
 	char	*delim;
 	char	*heredoc;
 
@@ -47,16 +57,12 @@ char	*read_heredoc(char *str, t_tokenizer *d, t_token *tkn)
 		{
 			tkn->expandable = 0;
 			d->spos++;
-			continue;
+			continue ;
 		}
 		delim = ft_strjoinchar(delim, (str)[d->spos]);
 		d->spos++;
 	}
-	if (DEBUG)
-		printf("delimiter = \"%s\"\n", delim);
 	heredoc = process_heredoc_input(delim);
-	if (DEBUG)
-		printf("heredoc:\n'%s'\n", heredoc);
 	free(delim);
 	return (heredoc);
 }
