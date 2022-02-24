@@ -39,6 +39,7 @@ SOURCES_C	=	myshell.c \
 				cleanup.c \
 				tokenizer.c \
 				tokenizer_rules.c \
+				tokenizer_rules2.c \
 				debug.c \
 				error.c \
 				echo.c \

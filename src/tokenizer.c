@@ -6,22 +6,19 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 08:09:24 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/24 00:20:20 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:52:37 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 #define DEBUG 0
 
-void	init_tokenizer_struct(t_tokenizer *d, int heredoc, int pos, char *str, int quoted)
+void	init_tokenizer_struct(t_tokenizer *d, char *str)
 {
 	d->cnt = NULL;
 	d->prev = 0;
 	d->tpos = 0;
-	d->spos = pos;
-	d->heredoc = heredoc;
 	d->str = str;
-	d->quoted = quoted;
 }
 
 /* Implements token rules */
@@ -32,17 +29,11 @@ int	token_rules(t_tokenizer *d, t_token *token, char *str)
 	res = 0;
 	if (delim_op_rules(d, token, str) == RET)
 		return (1);
-	if (DEBUG)
-		printf("quoterule: quoted = %d\n", d->quoted);
 	res = quote_rules(d, token, str);
 	if (res == SKIP)
 		return (0);
 	if (res == RET)
-	{
-		if (DEBUG)
-			printf("returning\n");
 		return (1);
-	}
 	if (mark_exp_rules(d, token, str) == SKIP)
 		return (0);
 	res = newop_rules(d, token, str);
@@ -50,8 +41,6 @@ int	token_rules(t_tokenizer *d, t_token *token, char *str)
 		return (1);
 	if (res == SKIP)
 		return (0);
-	if (DEBUG)
-		printf("wordrule: quoted = %d\n", d->quoted);
 	if (word_rules(d, token, str) == RET)
 		return (1);
 	return (0);

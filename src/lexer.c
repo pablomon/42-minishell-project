@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 18:53:57 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/24 00:22:38 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:55:28 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ int	is_op(char c)
 
 int	delimit_tkn(t_tokenizer *d, t_token *tkn)
 {
-	if (DEBUG)
-		ft_putendl_fd("Delimiting token",1 );
 	tkn->cnt = d->cnt;
 	if (tkn->type != TT_OP)
 		return (1);
@@ -45,12 +43,9 @@ int	delimit_tkn(t_tokenizer *d, t_token *tkn)
 int	put_token(char *str, t_token *token, t_param *param)
 {
 	static t_tokenizer	d;
-	if (DEBUG)
-		printf("put token: spos = %d, quoted = %d, c = '%c'\n", d.spos, d.quoted, str[d.spos]);
 
-	init_tokenizer_struct(&d, d.heredoc, d.spos, str, d.quoted);
+	init_tokenizer_struct(&d, str);
 	tokenize(&d, token, param);
-
 	if (token->type == TT_EMPTY)
 	{
 		token->type = TT_EOF;
@@ -86,19 +81,11 @@ t_list	*get_tokens(char *input, t_param *param)
 	t_token	*tokens;
 	t_list	*tkn_lst;
 	t_list	*tmp;
-	t_token	*t;
 
 	tkn_lst = ft_lstnew(new_token());
 	tmp = tkn_lst;
 	while (put_token(input, tmp->content, param))
 	{
-		t = (t_token*)tmp->content;
-		if (DEBUG)
-		{
-			print_tkn(t);
-			ft_putendl_fd("", 1);
-		}
-
 		ft_lstadd_back(&tkn_lst, ft_lstnew(new_token()));
 		tmp = tmp->next;
 	}

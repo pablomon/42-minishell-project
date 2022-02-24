@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/23 23:39:28 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:52:20 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void		cleanup(t_param *param);
 # define OT_NEWLINE 6
 
 t_list		*get_tokens(char *input, t_param *param);
-void		init_tokenizer_struct(t_tokenizer *d, int heredoc, int pos, char *str, int quoted);
+void		init_tokenizer_struct(t_tokenizer *d, char *str);
 void		tokenize(t_tokenizer *d, t_token *token, t_param *param);
 int			delim_op_rules(t_tokenizer *data, t_token *token, char *str);
 int			quote_rules(t_tokenizer *data, t_token *token, char *str);
