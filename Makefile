@@ -34,6 +34,7 @@ SOURCES_C	=	myshell.c \
 				builtins2.c \
 				builtins3.c \
 				environment.c \
+				environment2.c \
 				signals.c \
 				export.c \
 				utils2.c \
@@ -45,8 +46,7 @@ SOURCES_C	=	myshell.c \
 				echo.c \
 				init_params.c \
 				exec_aux.c \
-				redir.c \
-				env_aux.c
+				redir.c 
 
 SOURCES_G	=	get_next_line.c get_next_line_utils.c \
 

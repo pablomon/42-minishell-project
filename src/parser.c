@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/23 19:35:36 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 19:19:11 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,31 +69,48 @@ int	do_token(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 	return (0);
 }
 
+int	get_tkn_from_list(t_list *tokens, int pos, t_token **tkn, t_param *param)
+{
+	tkn[0] = NULL;
+	tkn[1] = NULL;
+	if (ft_lstat(tokens, pos))
+		tkn[0]  = (t_token *)(ft_lstat(tokens, pos)->content);
+	if (ft_lstat(tokens, pos + 1))
+	{
+		tkn[1] = (t_token *)(ft_lstat(tokens, pos + 1)->content);
+		if (tkn[0]->type == TT_OP && tkn[1]->type == TT_EOF)
+		{
+			pos = 0;
+			my_perror(SYNTAX_ERR, "|", 2);
+			param->syntx_err = 1;
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	get_command(t_list *tokens, t_command *cmd, t_param *param)
 {
 	static int	pos = 0;
 	t_token		*tkn;
 	t_token		*nxt;
 	int			res;
+	t_token 	*tkns[2];
 
-	tkn = (t_token *)(ft_lstat(tokens, pos)->content);
-	nxt = (t_token *)(ft_lstat(tokens, pos + 1)->content);
-	while (tkn && tkn->type != TT_EOF)
+	if (get_tkn_from_list(tokens, pos, tkns, param))
+		return (0);
+	while (tkns[0] && tkns[0]->type != TT_EOF)
 	{
-		res = do_token(tkn, nxt, cmd, &pos);
+		res = do_token(tkns[0], tkns[1], cmd, &pos);
 		if (res == STX_ERR)
 		{
 			pos = 0;
-			param->syntx_err = 1;
 			return (0);
 		}
 		if (res == CMD_CPT)
 			return (1);
 		pos++;
-		tkn = (t_token *)(ft_lstat(tokens, pos)->content);
-		nxt = NULL;
-		if (ft_lstat(tokens, pos + 1))
-			nxt = (t_token *)(ft_lstat(tokens, pos + 1)->content);
+		get_tkn_from_list(tokens, pos, tkns, param);
 	}
 	return (pos = 0);
 }

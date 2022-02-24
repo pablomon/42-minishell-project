@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvintila <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 23:09:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/23 23:09:52 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/24 15:08:28 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ void	execute_child(t_command *cmd, t_param *param, int cmd_num, int fds[2])
 		else if (execve(file, cmd->argv, envp) == -1)
 			check_str(file, cmd->argv[0], param);
 	}
+	free_arr(envp);
+	free(file);
 	cleanup(param);
 	exit(g_status);
 }

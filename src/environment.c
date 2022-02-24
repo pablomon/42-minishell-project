@@ -5,15 +5,39 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/30 12:38:17 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/24 00:06:37 by lvintila         ###   ########.fr       */
+/*   Created: 2022/02/24 15:37:30 by pmontese          #+#    #+#             */
+/*   Updated: 2022/02/24 16:16:17 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 
-/* busca si hay una variable con el mismo nombre y cambia su valor,
-si no lo hay devuelve 0 */
+char	**make_envp(t_param *param)
+{
+	char	**envp;
+	int		i;
+	int		h;
+	char	*tmp;
+
+	envp = (char **)(malloc(sizeof(char *) * (param->envvalc + 1)));
+	i = 0;
+	h = 0;
+	while (i < param->envc)
+	{
+		if (!param->env[i]->val)
+		{
+			i++;
+			continue ;
+		}
+		tmp = ft_strjoin(param->env[i]->key, "=");
+		envp[h] = ft_strjoin(tmp, param->env[i]->val);
+		free(tmp);
+		i++;
+		h++;
+	}
+	envp[h] = NULL;
+	return (envp);
+}
 
 int	try_set_existing_var(t_keyval *var, t_param *param)
 {
@@ -59,53 +83,48 @@ void	set_env_var(t_keyval *var, t_param *param)
 	}
 }
 
-char	*clean_val(char *str)
+void	unset_env_var(char *name, t_param *param)
 {
-	int		i;
-	char	*new;
-	int		can_space;
+	t_keyval	**new_env;
+	int			i;
+	int			j;
 
-	i = 0;
-	new = ft_strdup("");
-	can_space = 1;
-	while (str[i])
+	new_env = (t_keyval **)(malloc(sizeof(t_keyval *) * (param->envc - 1)));
+	i = -1;
+	j = 0;
+	while (++i < param->envc)
 	{
-		if (ft_isspace(str[i]))
+		if (ft_strcmp(name, param->env[i]->key) == 0)
 		{
-			if (can_space)
-			{
-				new = ft_strjoinchar(new, str[i]);
-				can_space = 0;
-			}
+			free(param->env[i]->key);
+			if (param->env[i]->val)
+				param->envvalc--;
+			free(param->env[i]->val);
+			free(param->env[i]);
+			continue ;
 		}
-		else
-		{
-			can_space = 1;
-			new = ft_strjoinchar(new, str[i]);
-		}
-		i++;
+		new_env[j] = param->env[i];
+		j++;
 	}
-	return (new);
+	free(param->env);
+	param->env = new_env;
+	param->envc--;
 }
 
-/* Allocate memory for a new t_keyval. A str without '=' is allowd (value = 0)
-limpia de espacios la parte a la derecha del igual*/
-
-t_keyval	*get_keyval(char *str)
+char	*mygetenv(char *name, t_param *param)
 {
-	int			len;
-	int			len2;
-	t_keyval	*pair;
+	int	i;
 
-	pair = (t_keyval *)(malloc(sizeof(t_keyval)));
-	pair->val = NULL;
-	len = 0;
-	while (str[len] && str[len] != '=')
-		len++;
-	pair->key = ft_substr(str, 0, len);
-	if (len != ft_strlen(str))
-		pair->val = clean_val(&str[len + 1]);
-	return (pair);
+	if (name == NULL)
+		return (NULL);
+	i = 0;
+	while (i < param->envc)
+	{
+		if (ft_strcmp(name, param->env[i]->key) == 0)
+			return (param->env[i]->val);
+		i++;
+	}
+	return (NULL);
 }
 
 void	my_setenv(char *name, char *value, t_param *param)
