@@ -6,18 +6,18 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 21:14:04 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 21:25:27 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 12:37:56 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 
-void	*my_perror(int err_type, char *str, int errnum)
+int	my_perror(int err_type, char *str, int errnum)
 {
 	g_status = errnum;
-	if (err_type == NOQUOTE)
-		ft_putstr_fd("minishell: error while looking for matching quote\n", 2);
-	else if (err_type == NODIR)
+	if (err_type == NOHOME)
+		ft_putstr_fd("minishell: Error: Home not set\n", 2);
+	else if (err_type == NOFILDIR)
 		ft_putstr_fd("minishell: No such file or directory: ", 2);
 	else if (err_type == NOPERM)
 		ft_putstr_fd("minishell: permission denied: ", 2);
@@ -38,5 +38,5 @@ void	*my_perror(int err_type, char *str, int errnum)
 	else if (err_type == SYNTAX_ERR)
 		ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
 	ft_putendl_fd(str, 2);
-	return (NULL);
+	return (1);
 }

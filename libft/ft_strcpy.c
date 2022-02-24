@@ -6,16 +6,16 @@
 /*   By: lvintila <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/20 20:09:36 by lvintila          #+#    #+#             */
-/*   Updated: 2021/12/20 20:11:54 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:28:16 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *ft_strcpy(char *dest, char *src)
+char	*ft_strcpy(char *dest, char *src)
 {
-	int i;
-	char a;
+	int		i;
+	char	a;
 
 	i = 0;
 	while (src[i] != '\0')

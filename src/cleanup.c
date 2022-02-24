@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvintila <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/22 22:27:03 by lvintila          #+#    #+#             */
+/*   Updated: 2022/02/23 22:48:59 by lvintila         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/myshell.h"
 
 void	free_tokens(t_list *tknlst)
 {
-	t_token *t;
+	t_token	*t;
 	t_list	*tmp;
 
 	if (!tknlst)
-		return;
+		return ;
 	tmp = tknlst;
 	while (tmp)
 	{
-		t = (t_token*)(tmp->content);
+		t = (t_token *)(tmp->content);
 		if (t->type != TT_EOF)
 			free(t->cnt);
 		free(t);
@@ -51,7 +63,6 @@ void	cleanup(t_param *param)
 {
 	int	i;
 
-	// environment
 	i = 0;
 	while (i < param->envc)
 	{

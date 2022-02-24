@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 17:58:38 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/22 20:42:23 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/22 22:50:31 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,37 +34,42 @@ int	get_cmd(t_param *param)
 	i = 0;
 	if (rawline != NULL)
 	{
-		// Limpiar el principio del input de espacios
 		while (ft_isspace(rawline[i]))
 			i++;
 		param->line = ft_strdup(&rawline[i]);
 		free(rawline);
-		// Si después de limpiar todavía hay algo devuelve 1
 		if (*param->line != 0)
 			return (1);
-		// Si la linea está vacía devuelve 0
 		return (0);
 	}
 	else
 	{
-		write(1,"exit",4);
+		write(1, "exit", 4);
 		return (EOF);
 	}
 }
 
-
-int myshell_loop(t_param *param, char *av[])
+void	init_loop(t_param *param)
 {
-	// int		interactive;
+	param->tkn_lst = get_tokens(param->line, param);
+	param->cmd_lst = parser(param->tkn_lst, param);
+	if (!param->syntx_err)
+	{
+		expand_tokens(param->tkn_lst, param);
+		g_status = cmd_execute(param->cmd_lst, param);
+	}
+	param->syntx_err = 0;
+	free_tokens(param->tkn_lst);
+	param->tkn_lst = NULL;
+	free_commands(param->cmd_lst);
+	param->cmd_lst = NULL;
+}
+
+int	myshell_loop(t_param *param, char *av[])
+{
 	int			read;
 	t_token		*tokens;
 	t_command	**commands;
-
-	/*
-	interactive = 1;
-	if (isatty(STDIN_FILENO) == 0)
-		interactive = 0;
-	*/
 
 	while (1)
 	{
@@ -75,20 +80,7 @@ int myshell_loop(t_param *param, char *av[])
 			return (0);
 		}
 		if (read)
-		{
-			param->tkn_lst = get_tokens(param->line, param);
-			param->cmd_lst = parser(param->tkn_lst, param);
-			if (!param->syntx_err)
-			{
-				expand_tokens(param->tkn_lst, param);
-				g_status = cmd_execute(param->cmd_lst, param);
-			}
-			param->syntx_err = 0;
-			free_tokens(param->tkn_lst);
-			param->tkn_lst = NULL;
-			free_commands(param->cmd_lst);
-			param->cmd_lst = NULL;
-		}
+			init_loop(param);
 		free(param->line);
 		param->line = NULL;
 	}

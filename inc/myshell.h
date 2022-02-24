@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/24 00:52:20 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 12:38:40 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 # include "../gnl/get_next_line.h"
 # include "../libft/libft.h"
 
-# define STDIN 0
-# define STDOUT 1
+# define READ_END 0
+# define WRITE_END 1
 
 # define RL_BUFF_SIZE 1024
 # define TK_BUFF_SIZE 64
@@ -51,34 +51,33 @@ ANSI Color codes
 
 # define SHLNAME		"minishell"
 
-typedef struct	s_keyval
+typedef struct s_keyval
 {
 	char	*key;
 	char	*val;
 }				t_keyval;
 
-typedef struct  s_param
+typedef struct s_param
 {
 	int			default_in;
 	int			default_out;
 	int			fd_in;
-	int 		fd_out;
+	int			fd_out;
 	char		*line;
-	int			cmdc; // num of commands 
+	int			cmdc;
 	t_keyval	**env;
-	int			envc; // num of env variables
-	int			envvalc; // num of env varirables with value, usado para generar el envp
+	int			envc;
+	int			envvalc;
 	int			process_status;
 	char		*prompt;
 	t_list		*tkn_lst;
 	t_list		*cmd_lst;
 	int			syntx_err;
-
-}               t_param;
+}				t_param;
 
 typedef struct s_token
 {
-	char*	cnt;
+	char	*cnt;
 	int		type;
 	int		op_type;
 	int		delimited;
@@ -97,18 +96,18 @@ typedef struct s_fileout
 typedef struct s_command
 {
 	int		is_assignment;
-	char*	name;
+	char	*name;
 	int		argc;
-	char**	argv;
+	char	**argv;
 	t_list	*arglst;
-	char*	filein;
+	char	*filein;
 	t_token	*fileintkn;
-	char*	lastfileout;
+	char	*lastfileout;
 	t_token	*lastfileouttkn;
 	int		fileoutc;
 	t_list	*fileouts;
 	int		append;
-	char*	hdocword;
+	char	*hdocword;
 	t_token	*hdoctkn;
 	int		piped;
 }			t_command;
@@ -118,7 +117,7 @@ typedef struct s_command
 
 typedef struct s_tokenizer
 {
-	char*	cnt;
+	char	*cnt;
 	char	c;
 	char	prev;
 	int		quoted;
@@ -132,29 +131,31 @@ typedef struct s_tokenizer
 }			t_tokenizer;
 
 /* Errors */
-#define NODIR 7
-#define NOPERM 8
-#define NOCMD 9
-#define DUP_ERR 10
-#define PIPEND_ERR 11
-#define PIPE_ERR 12
-#define FORK_ERR 13
-#define MEM_ERR 14
-#define IS_DIR 15
-#define NOT_DIR 16
-#define SYNTAX_ERR 17
-long long int				g_status;
-void	*my_perror(int err_type, char *str, int errnum);
+# define NOHOME 6
+# define NOFILDIR 7
+# define NOPERM 8
+# define NOCMD 9
+# define DUP_ERR 10
+# define PIPEND_ERR 11
+# define PIPE_ERR 12
+# define FORK_ERR 13
+# define MEM_ERR 14
+# define IS_DIR 15
+# define NOT_DIR 16
+# define SYNTAX_ERR 17
+
+long long int		g_status;
+int					my_perror(int err_type, char *str, int errnum);
 
 /* Shell functions*/
-void	init_param(t_param *param, char **env, char *cwd);
-void	update_prompt(t_param *param);
-int		myshell_loop(t_param *param, char **av);
+void				init_param(t_param *param, char **env, char *cwd);
+void				update_prompt(t_param *param);
+int					myshell_loop(t_param *param, char **av);
 
 /* Clean up */
-void		free_tokens(t_list *tknlst);
-void		free_commands(t_list *commands);
-void		cleanup(t_param *param);
+void				free_tokens(t_list *tknlst);
+void				free_commands(t_list *commands);
+void				cleanup(t_param *param);
 
 /* Lexer */
 # define TOK_DELIM " >\t\r\n\a"
@@ -163,12 +164,11 @@ void		cleanup(t_param *param);
 # define TT_OP 1
 # define TT_WORD 2
 # define TT_EOF 3
-# define TT_EMPTYQUOTED 4
- 
+
 # define NOQUOTE 0
 # define SQUOTE 1
 # define DQUOTE 2
- 
+
 # define OT_PIPE 1
 # define OT_IRED 2
 # define OT_ORED 3
@@ -176,89 +176,98 @@ void		cleanup(t_param *param);
 # define OT_HEREDOC 5
 # define OT_NEWLINE 6
 
-t_list		*get_tokens(char *input, t_param *param);
-void		init_tokenizer_struct(t_tokenizer *d, char *str);
-void		tokenize(t_tokenizer *d, t_token *token, t_param *param);
-int			delim_op_rules(t_tokenizer *data, t_token *token, char *str);
-int			quote_rules(t_tokenizer *data, t_token *token, char *str);
-int			mark_exp_rules(t_tokenizer *data, t_token *token, char *str);
-int			newop_rules(t_tokenizer *data, t_token *token, char *str);
-int			word_rules(t_tokenizer *data, t_token *token, char *str);
-int			delimit_tkn(t_tokenizer *data, t_token *tkn);
-int			is_op(char c);
+t_list				*get_tokens(char *input, t_param *param);
+void				init_tokenizer_struct(t_tokenizer *d, char *str);
+void				tokenize(t_tokenizer *d, t_token *token, t_param *param);
+int					delim_op_rules(t_tokenizer *data, t_token *token,
+						char *str);
+int					quote_rules(t_tokenizer *data, t_token *token, char *str);
+int					mark_exp_rules(t_tokenizer *data, t_token *token,
+						char *str);
+int					newop_rules(t_tokenizer *data, t_token *token, char *str);
+int					word_rules(t_tokenizer *data, t_token *token, char *str);
+int					delimit_tkn(t_tokenizer *data, t_token *tkn);
+int					is_op(char c);
 
 /* Expander */
-void		expand_tokens(t_list *tkn_lst, t_param *param);
-char		*the_expanse(char *str, t_param *param);
+void				expand_tokens(t_list *tkn_lst, t_param *param);
+char				*the_expanse(char *str, t_param *param);
 
 /* Heredoc */
-char		*read_heredoc(char *str, t_tokenizer *d, t_token *tkn);
+char				*read_heredoc(char *str, t_tokenizer *d, t_token *tkn);
 
 /* Parser */
-t_list		*parser(t_list *tknlst, t_param *param);
-t_command	*new_command(int max_args);
-void		argv_append(t_command *cmd, t_token *newargtkn);
-void		add_fileout(t_command *cmd, t_token *file, int operator);
+t_list				*parser(t_list *tknlst, t_param *param);
+t_command			*new_command(int max_args);
+void				argv_append(t_command *cmd, t_token *newargtkn);
+void				add_fileout(t_command *cmd, t_token *file, int operator);
 
 /* Executer */
-void		executer(char **env, t_token *tokens, t_command **cmd_lst);
-int		cmd_execute(t_list *cmd_list, t_param *param);
+void				executer(char **env, t_token *tokens, t_command **cmd_lst);
+int					cmd_execute(t_list *cmd_list, t_param *param);
 
 /* Built ins*/
-int			is_valid_identifier(char *arg, int allow_equalsign);
-void		bi_exit_child(t_command *cmd, t_param *param, int cmd_num);
-void		bi_exit_parent(t_command *cmd, t_param *param, int cmd_num);
-void		bi_env(t_param *param, int ischild);
-void		bi_export(t_command *cmd, t_param *param, int ischild);
-void		bi_unset(t_command *cmd, t_param *param, int ischild);
-void		bi_cd(t_command *cmd, t_param *param, int ischild);
-int			bi_echo(t_command *cmd, int ischild);
-int			bi_pwd(int ischild);
+int					is_valid_identifier(char *arg, int allow_equalsign);
+void				bi_exit_child(t_command *cmd, t_param *param, int cmd_num);
+void				bi_exit_parent(t_command *cmd, t_param *param, int cmd_num);
+void				bi_env(t_param *param, int ischild);
+void				bi_export(t_command *cmd, t_param *param, int ischild);
+void				bi_unset(t_command *cmd, t_param *param, int ischild);
+int					bi_cd(t_command *cmd, t_param *param, int ischild);
+int					bi_echo(t_command *cmd, int ischild);
+int					bi_pwd(int ischild);
 
 /* diffrent utility functions */
-char        space_tab(unsigned int i, char c);
-char        **parse(char *buff);
-int         get_cmd(t_param *param);
-char        *rl_gets(t_param *param);
-char        *find_path(char *cmd, char **envp);
-void        check_str(char *str, char *cmd, t_param *param);
-void        free_arr(char **arr);
-int         found_char(char *str, char c);
-int			try_bis(t_command *cmd, t_param *param, int ischild, int cmd_num);
+char				space_tab(unsigned int i, char c);
+char				**parse(char *buff);
+int					get_cmd(t_param *param);
+char				*rl_gets(t_param *param);
+char				*find_path(char *cmd, char **envp);
+void				check_str(char *str, char *cmd, t_param *param);
+void				free_arr(char **arr);
+int					found_char(char *str, char c);
+int					try_bis(t_command *cmd, t_param *param, int ischild,
+						int cmd_num);
 
 /* environment */
-t_keyval	*get_keyval(char *str);
-int			try_set_existing_var(t_keyval *var, t_param *param);
-void		set_env_var(t_keyval *var, t_param *param);
-void		unset_env_var(char *name, t_param *param);
-char		*mygetenv(char *name, t_param *param);
-char		**make_envp(t_param *param);
-void		print_export(t_param *param);
-void		my_setenv(char *name, char *value, t_param *param);
-
+t_keyval			*get_keyval(char *str);
+int					try_set_existing_var(t_keyval *var, t_param *param);
+void				set_env_var(t_keyval *var, t_param *param);
+void				unset_env_var(char *name, t_param *param);
+char				*mygetenv(char *name, t_param *param);
+char				**make_envp(t_param *param);
+void				print_export(t_param *param);
+void				my_setenv(char *name, char *value, t_param *param);
+char				**make_envp(t_param *param);
 /* signals */
-void	reg_parent_signals();
-void	reg_child_signals();
-
+// void				rl_replace_line(char *str, int num);
+void				reg_parent_signals(void);
+void				reg_child_signals(void);
 /* utils */
-// l
-int		ft_arr_len(char **arr);
-int		ft_strchr_i(const char *s, int c);
-char	**ft_extend_arr(char **in, char *new_str);
-char	**ft_dup_arr(char **arr);
-char	**ft_arr_replace_in(char ***big, char **small, int n);
-void	ft_free_arr(char ***arr);
-int		ft_put_arr_fd(char **arr, int fd);
-// p
-void	emptyfunc(void *v);
-int		isvalidchar4var(char c, int is_start);
-char	*ft_strjoinchar(char *str, char c);
-size_t	ft_wordcount(char const *str, char delimiter);
-t_list	*ft_lstat(t_list *lst, int pos);
+int					ft_arr_len(char **arr);
+int					ft_strchr_i(const char *s, int c);
+char				**ft_extend_arr(char **in, char *new_str);
+char				**ft_dup_arr(char **arr);
+char				**ft_arr_replace_in(char ***big, char **small, int n);
+void				ft_free_arr(char ***arr);
+int					ft_put_arr_fd(char **arr, int fd);
+void				emptyfunc(void *v);
+int					isvalidchar4var(char c, int is_start);
+char				*ft_strjoinchar(char *str, char c);
+size_t				ft_wordcount(char const *str, char delimiter);
+t_list				*ft_lstat(t_list *lst, int pos);
 
 /* debug */
-void	print_arr(char **arr);
-void	print_tkn(t_token *tkn);
-void	print_cmd(t_command *cmd);
+void				print_arr(char **arr);
+void				print_tkn(t_token *tkn);
+void				print_cmd(t_command *cmd);
+
+void				execute_child(t_command *cmd, t_param *param,
+						int cmd_num, int fds[2]);
+void				update_command_args(t_command *c, t_param *param);
+int					open_redirections(t_command *cmd, t_param *param,
+						t_list *fileout_lst);
+void				check_heredoc_in_redir(t_param *param, t_command *cmd);
+int					check_ambiguous_redir(char *str);
 
 #endif

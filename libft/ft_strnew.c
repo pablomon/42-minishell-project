@@ -6,7 +6,7 @@
 /*   By: lvintila <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 18:49:56 by lvintila          #+#    #+#             */
-/*   Updated: 2021/12/21 18:50:05 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:30:42 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strnew(size_t size)
 {
-	char *res;
+	char	*res;
 
 	res = malloc(size + 1);
 	if (!res)

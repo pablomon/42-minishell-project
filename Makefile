@@ -9,6 +9,7 @@ NAME		= 	minishell
 
 CC			=	gcc
 
+#RL_FLAG		=	-L /usr/local/Cellar/readline/8.1.2/lib -I /usr/local/Cellar/readline/8.1.2/include 
 RL_FLAG		=	-L/Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include
 SAN_FLAG	=	-fsanitize=address -fdiagnostics-color=always
 DEBUG_FLAG	=	-g3# -O0
@@ -25,13 +26,13 @@ SOURCES_C	=	myshell.c \
 				utils.c \
 				parser.c \
 				parser_tools.c \
-				utils_aux.c \
 				expander.c \
 				lexer.c \
 				executer.c \
 				heredoc.c \
 				builtins1.c \
 				builtins2.c \
+				builtins3.c \
 				environment.c \
 				signals.c \
 				export.c \
@@ -40,10 +41,12 @@ SOURCES_C	=	myshell.c \
 				tokenizer.c \
 				tokenizer_rules.c \
 				tokenizer_rules2.c \
-				debug.c \
 				error.c \
 				echo.c \
-				init_params.c
+				init_params.c \
+				exec_aux.c \
+				redir.c \
+				env_aux.c
 
 SOURCES_G	=	get_next_line.c get_next_line_utils.c \
 

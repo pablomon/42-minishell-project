@@ -6,43 +6,16 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/30 12:38:17 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/19 14:30:00 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:06:37 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
 
-char	**make_envp(t_param *param)
-{
-	char	**envp;
-	int		i;
-	int		h;
-	char	*tmp;
-
-	envp = (char**)(malloc(sizeof(char*) * (param->envvalc + 1)));
-	i = 0;
-	h = 0;
-	
-	while (i < param->envc)
-	{
-		if (!param->env[i]->val)
-		{
-			i++;
-			continue;
-		}
-		tmp = ft_strjoin(param->env[i]->key, "=");
-		envp[h] = ft_strjoin(tmp, param->env[i]->val);
-		free(tmp);
-		i++;
-		h++;
-	}
-	envp[h] = NULL;
-	return (envp);
-}
-
 /* busca si hay una variable con el mismo nombre y cambia su valor,
 si no lo hay devuelve 0 */
-int		try_set_existing_var(t_keyval *var, t_param *param)
+
+int	try_set_existing_var(t_keyval *var, t_param *param)
 {
 	int	i;
 
@@ -62,16 +35,14 @@ int		try_set_existing_var(t_keyval *var, t_param *param)
 	return (0);
 }
 
-/* Damos por hecho que key y value están en el heap*/
 void	set_env_var(t_keyval *var, t_param *param)
 {
 	int			i;
 	t_keyval	**new_env;
 
-	if (!try_set_existing_var(var, param)) // si no existe la variable
+	if (!try_set_existing_var(var, param))
 	{
-		// actualiza env
-		new_env = (t_keyval**)(malloc(sizeof(t_keyval*) * (param->envc + 1)));
+		new_env = (t_keyval **)(malloc(sizeof(t_keyval *) * (param->envc + 1)));
 		i = 0;
 		while (i < param->envc)
 		{
@@ -88,66 +59,15 @@ void	set_env_var(t_keyval *var, t_param *param)
 	}
 }
 
-// esta función presupone que la variable existe
-void	unset_env_var(char *name, t_param *param)
-{
-	t_keyval	**new_env;
-	int			i;
-	int			j;
-
-	new_env = (t_keyval**)(malloc(sizeof(t_keyval*) * (param->envc - 1)));
-	i = 0;
-	j = 0;
-	while (i < param->envc)
-	{
-		if (ft_strcmp(name, param->env[i]->key) == 0)
-		{
-			free(param->env[i]->key);
-			if (param->env[i]->val)
-				param->envvalc--;
-			free(param->env[i]->val);
-			free(param->env[i]);
-			i++;
-			continue;
-		}
-		new_env[j] = param->env[i];
-		i++;
-		j++;
-	}
-	if (param->env != NULL)
-		free(param->env);
-	param->env = new_env;
-	param->envc--;
-}
-
-
-char		*mygetenv(char *name, t_param *param)
-{
-	int i;
-
-	if (name == NULL)
-		return (NULL);
-	i = 0;
-	while (i < param->envc)
-	{
-		if (ft_strcmp(name, param->env[i]->key) == 0)
-			return (param->env[i]->val);
-		i++;
-	}
-	return (NULL);
-}
-
-/* remove multiple spaces */
 char	*clean_val(char *str)
 {
-	int	i;
-	int lft;
-	int rgt;
+	int		i;
 	char	*new;
+	int		can_space;
 
 	i = 0;
 	new = ft_strdup("");
-	int can_space = 1;
+	can_space = 1;
 	while (str[i])
 	{
 		if (ft_isspace(str[i]))
@@ -170,24 +90,21 @@ char	*clean_val(char *str)
 
 /* Allocate memory for a new t_keyval. A str without '=' is allowd (value = 0)
 limpia de espacios la parte a la derecha del igual*/
+
 t_keyval	*get_keyval(char *str)
 {
-	int	len;
-	int	len2;
+	int			len;
+	int			len2;
 	t_keyval	*pair;
 
-	pair = (t_keyval*)(malloc(sizeof(t_keyval)));
+	pair = (t_keyval *)(malloc(sizeof(t_keyval)));
 	pair->val = NULL;
 	len = 0;
 	while (str[len] && str[len] != '=')
 		len++;
 	pair->key = ft_substr(str, 0, len);
 	if (len != ft_strlen(str))
-	{
-		// pair->val = ft_strdup(&str[len + 1]);
 		pair->val = clean_val(&str[len + 1]);
-
-	}
 	return (pair);
 }
 
@@ -195,7 +112,7 @@ void	my_setenv(char *name, char *value, t_param *param)
 {
 	t_keyval	*pair;
 
-	pair = (t_keyval*)(malloc(sizeof(t_keyval)));
+	pair = (t_keyval *)(malloc(sizeof(t_keyval)));
 	pair->key = ft_strdup(name);
 	pair->val = ft_strdup(value);
 	set_env_var(pair, param);

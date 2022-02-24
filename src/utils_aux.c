@@ -6,7 +6,7 @@
 /*   By: lvintila <lvintila@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 21:11:43 by lvintila          #+#    #+#             */
-/*   Updated: 2022/01/27 22:34:28 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/23 23:15:55 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,57 +20,6 @@ int	ft_arr_len(char **arr)
 	while (arr && arr[i])
 		i++;
 	return (i);
-}
-
-int	ft_strchr_i(const char *s, int c)
-{
-	unsigned char	c_unsigned;
-	int				i;
-
-	i = 0;
-	if (!s)
-		return (-1);
-	c_unsigned = (unsigned char)c;
-	while (s[i] != '\0')
-	{
-		if (s[i] == c_unsigned)
-			return (i);
-		i++;
-	}
-	if (c_unsigned == '\0')
-		return (i);
-	return (-1);
-}
-
-char	**ft_extend_arr(char **in, char *new_str)
-{
-	char	**out;
-	int		len;
-	int		i;
-
-	i = -1;
-	out = NULL;
-	if (!new_str)
-		return (in);
-	len = ft_arr_len(in);
-	out = malloc(sizeof(char *) * (len + 2));
-	out[len + 1] = NULL;
-	if (!out)
-		return (in);
-	while (++i < len)
-	{
-        printf("out[0] es: %s\n", out[0]);
-		out[i] = ft_strdup(in[i]);
-        printf("check strdup ---- > \n");
-	 	if (!out[i])
-		{
-			ft_free_arr(&in);
-			ft_free_arr(&out);
-		}
-	}
-	out[i] = ft_strdup(new_str);
-	ft_free_arr(&in);
-	return (out);
 }
 
 char	**ft_dup_arr(char **arr)

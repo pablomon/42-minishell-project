@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/08 17:05:42 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/21 20:21:19 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:37:18 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ long double			ft_atol(const char *s);
 char				*ft_strcpy(char *dest, char *src);
 char				*ft_strnew(size_t size);
 char				*ft_strcat(char *dest, char *src);
-int			ft_getline(char **str, char **line, char *s);
+int					ft_getline(char **str, char **line, char *s);
 char				*ft_strndup(const char *src, size_t len);
 char				*ft_strncpy(char *dst, const char *src, size_t len);
 int					ft_atoi2(const char *nptr, long *nbr);

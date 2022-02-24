@@ -6,7 +6,7 @@
 /*   By: lvintila <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 20:42:23 by lvintila          #+#    #+#             */
-/*   Updated: 2021/12/26 20:44:29 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/24 00:30:21 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ char	*ft_strndup(const char *src, size_t len)
 {
 	char	*str;
 
-	if (!(str = (char*)malloc(len + 1)))
+	str = (char *)malloc(len + 1);
+	if (!str)
 		return (NULL);
 	return (ft_strncpy(str, src, len));
 }

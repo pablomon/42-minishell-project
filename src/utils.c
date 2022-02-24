@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 20:22:27 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/22 20:25:36 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/23 23:59:26 by lvintila         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,25 @@ void	check_str(char *str, char *cmd, t_param *param)
 	}
 }
 
+char	**path_envp(char **envp)
+{
+	int		i;
+	char	**tab;
+
+	if (!tab && !tab[0])
+		return (NULL);
+	i = -1;
+	while (envp[++i])
+	{
+		if (!ft_strncmp(envp[i], "PATH=", 5))
+		{
+			tab = ft_split(ft_strchr(envp[i], '/'), ':');
+			break ;
+		}
+	}
+	return (tab);
+}
+
 char	*find_path(char *cmd, char **envp)
 {
 	int		i;
@@ -29,18 +48,9 @@ char	*find_path(char *cmd, char **envp)
 	char	*tmp;
 	char	**tab;
 
- 	//TODO cambiar la función para que no utilize envp, si no directamente param->env
 	if (ft_strchr(cmd, '/') && access(cmd, F_OK) == 0)
 		return (cmd);
-	i = -1;
-	while (envp[++i])
-	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
-	 	{
-	 		tab = ft_split(ft_strchr(envp[i], '/'), ':');
-	 		break ;
-	 	}
-	}
+	tab = path_envp(envp);
 	i = -1;
 	while (tab[++i])
 	{
@@ -70,65 +80,16 @@ void	free_arr(char **arr)
 
 char	*rl_gets(t_param *param)
 {
-	/*
-	 * * A static variable for holding the line.
-	 */
-	static char *line_read;
+	static char	*line_read;
 
-
-	line_read = (char *)NULL;
-	/*
-    ¦* If the buffer has already been allocated, return the memory
-    ¦* to the free pool.
-	 */
+	line_read = NULL;
 	if (line_read)
 	{
 		free (line_read);
-		line_read = (char *)NULL;
+		line_read = NULL;
 	}
-	/*
-	 * Get a line from the user.
-	 */
-
-	// ft_putstr_fd(param->prompt, 2);
 	line_read = readline(param->prompt);
-	/*
-	 * If the line has any text in it, save it on the history.
-	 */
-    if (line_read && *line_read)
+	if (line_read && *line_read)
 		add_history (line_read);
-    return (line_read);
-}
-
-
-int	found_op(char *str, char *op)
-{
-	int i;
-
-	i = 0;
-	while (*str++ != '\0')
-	{
-		if (str == op)
-		{
-			printf("found_op say: \"found op\" ...\n");
-			return (0);
-		}
-	}
-	return (1);
-}
-
-int	found_char(char *str, char c)
-{
-	int i;
-
-	i = 0;
-	while (str[++i] != '\0')
-	{
-		if (str[i] == c)
-		{
-			printf("found_char say: \"found\" > ...\n");
-			return (0);
-		}
-	}
-	return (1);
+	return (line_read);
 }
