@@ -25,8 +25,6 @@ DEBUG_FLAG	=	-g3# -O0
 FLAG		=	$(RL_FLAG) $(SAN_FLAG) $(DEBUG_FLAG) -Wall -Werror -Wextra -I. -L/usr/include -lreadline -o $(NAME)
 
 DIR_S		=	src
-DIR_O		=	obj
-DIR_G		=	gnl
 INC			=	inc
 
 SOURCES_C	=	myshell.c \

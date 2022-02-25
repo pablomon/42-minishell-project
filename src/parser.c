@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/24 21:15:22 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 12:23:12 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ int	get_command(t_list *tokens, t_command *cmd, t_param *param)
 	t_token		*tkns[2];
 
 	if (get_tkn_from_list(tokens, pos, tkns, param))
+	{
+		pos = 0;
 		return (0);
+	}
 	while (tkns[0] && tkns[0]->type != TT_EOF)
 	{
 		res = do_token(tkns[0], tkns[1], cmd, &pos);
