@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvintila <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 22:22:08 by lvintila          #+#    #+#             */
-/*   Updated: 2020/01/22 17:31:21 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/24 23:42:53 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	t_list	*tmp;
+	t_list	*last;
 
 	if (lst)
 	{
@@ -22,8 +22,8 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 			*lst = new;
 		else
 		{
-			tmp = ft_lstlast(*(lst));
-			tmp->next = new;
+			last = ft_lstlast(*lst);
+			last->next = new;
 		}
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/12 18:55:41 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/23 19:00:03 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 01:05:33 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ int	main(int ac, char *av[], char **env)
 	printf("\n%s\n", "M I N I S H E L L\t\t\tby pmontese & lvintila\n");
 	status = myshell_loop(param, av);
 	cleanup(param);
+	system("leaks minishell");
 	return (status);
 }

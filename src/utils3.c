@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast.c                                       :+:      :+:    :+:   */
+/*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/15 21:04:02 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/25 00:20:30 by pmontese         ###   ########.fr       */
+/*   Created: 2022/01/30 12:38:17 by pmontese          #+#    #+#             */
+/*   Updated: 2022/02/25 01:05:45 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/myshell.h"
 
-t_list	*ft_lstlast(t_list *lst)
+void	freefunc(void *v)
 {
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	free(v);
 }

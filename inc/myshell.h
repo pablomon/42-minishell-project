@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/24 12:38:40 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 01:01:11 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include "../gnl/get_next_line.h"
 # include "../libft/libft.h"
 
+# define LEAKS 0
+
 # define READ_END 0
 # define WRITE_END 1
 
@@ -40,16 +42,16 @@
 ANSI Color codes
  */
 # define RED   		"\033[0;31m"
-# define YELLOW 		"\033[0;33m"
+# define YELLOW 	"\033[0;33m"
 # define CYAN 		"\033[0;36m"
 # define GREEN 		"\033[0;32m"
 # define BLUE 		"\033[0;34m"
 # define INVERT		"\033[0;7m"
-# define RESET  		"\e[0m"
+# define RESET  	"\e[0m"
 # define BOLD		"\e[1m"
-# define ITALICS		"\e[3m" 
+# define ITALICS	"\e[3m"
 
-# define SHLNAME		"minishell"
+# define SHLNAME	"minishell"
 
 typedef struct s_keyval
 {
@@ -131,6 +133,7 @@ typedef struct s_tokenizer
 }			t_tokenizer;
 
 /* Errors */
+# define WRONGID 5
 # define NOHOME 6
 # define NOFILDIR 7
 # define NOPERM 8
@@ -252,6 +255,7 @@ char				**ft_arr_replace_in(char ***big, char **small, int n);
 void				ft_free_arr(char ***arr);
 int					ft_put_arr_fd(char **arr, int fd);
 void				emptyfunc(void *v);
+void				freefunc(void *v);
 int					isvalidchar4var(char c, int is_start);
 char				*ft_strjoinchar(char *str, char c);
 size_t				ft_wordcount(char const *str, char delimiter);
@@ -270,4 +274,5 @@ int					open_redirections(t_command *cmd, t_param *param,
 void				check_heredoc_in_redir(t_param *param, t_command *cmd);
 int					check_ambiguous_redir(char *str);
 
+int					rl_replace_line(char *, int);
 #endif

@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/30 12:38:17 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/23 22:47:49 by lvintila         ###   ########.fr       */
+/*   Updated: 2022/02/25 00:38:10 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	isvalidchar4var(char c, int is_start)
 	return (0);
 }
 
-/* appends a character to a string, it allocs space and frees the original 
+/* appends a character to a string, it allocs space and frees the original
  * string.
  * str can be null, in that case it returns a string with the character c */
 

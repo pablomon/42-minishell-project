@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/24 19:24:05 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/24 21:15:22 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	parse_redir(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 
 int	do_token(t_token *tkn, t_token *nxt, t_command *cmd, int *pos)
 {
-	if (tkn->op_type == OT_PIPE && cmd->name == NULL || \
+	if ((tkn->op_type == OT_PIPE && cmd->name == NULL) || \
 	parse_redir(tkn, nxt, cmd, pos))
 	{
 		my_perror(SYNTAX_ERR, tkn->cnt, 2);

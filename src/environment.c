@@ -3,41 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:37:30 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/24 16:16:17 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 01:04:22 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/myshell.h"
-
-char	**make_envp(t_param *param)
-{
-	char	**envp;
-	int		i;
-	int		h;
-	char	*tmp;
-
-	envp = (char **)(malloc(sizeof(char *) * (param->envvalc + 1)));
-	i = 0;
-	h = 0;
-	while (i < param->envc)
-	{
-		if (!param->env[i]->val)
-		{
-			i++;
-			continue ;
-		}
-		tmp = ft_strjoin(param->env[i]->key, "=");
-		envp[h] = ft_strjoin(tmp, param->env[i]->val);
-		free(tmp);
-		i++;
-		h++;
-	}
-	envp[h] = NULL;
-	return (envp);
-}
 
 int	try_set_existing_var(t_keyval *var, t_param *param)
 {
