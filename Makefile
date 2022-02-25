@@ -49,10 +49,7 @@ SOURCES_C	=	myshell.c \
 				exec_aux.c \
 				redir.c
 
-SOURCES_G	=	get_next_line.c get_next_line_utils.c \
-
 SRCS		= 	$(addprefix $(DIR_S)/, $(SOURCES_C)) \
-				$(addprefix $(DIR_G)/, $(SOURCES_G)) \
 
 OBJS		=	$(SRCS:%.c=%.o)
 

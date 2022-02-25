@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/25 01:01:11 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 11:45:54 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-# include "../gnl/get_next_line.h"
 # include "../libft/libft.h"
 
 # define LEAKS 0
@@ -179,18 +178,16 @@ void				cleanup(t_param *param);
 # define OT_HEREDOC 5
 # define OT_NEWLINE 6
 
-t_list				*get_tokens(char *input, t_param *param);
-void				init_tokenizer_struct(t_tokenizer *d, char *str);
-void				tokenize(t_tokenizer *d, t_token *token, t_param *param);
-int					delim_op_rules(t_tokenizer *data, t_token *token,
-						char *str);
-int					quote_rules(t_tokenizer *data, t_token *token, char *str);
-int					mark_exp_rules(t_tokenizer *data, t_token *token,
-						char *str);
-int					newop_rules(t_tokenizer *data, t_token *token, char *str);
-int					word_rules(t_tokenizer *data, t_token *token, char *str);
-int					delimit_tkn(t_tokenizer *data, t_token *tkn);
-int					is_op(char c);
+t_list		*get_tokens(char *input, t_param *param);
+void		init_tokenizer_struct(t_tokenizer *d, char *str);
+void		tokenize(t_tokenizer *d, t_token *token, t_param *param);
+int			delim_op_rules(t_tokenizer *data, t_token *token, char *str);
+int			quote_rules(t_tokenizer *data, t_token *token, char *str);
+int			mark_exp_rules(t_tokenizer *data, t_token *token, char *str);
+int			newop_rules(t_tokenizer *data, t_token *token, char *str);
+int			word_rules(t_tokenizer *data, t_token *token, char *str);
+int			delimit_tkn(t_tokenizer *data, t_token *tkn);
+int			is_op(char c);
 
 /* Expander */
 void				expand_tokens(t_list *tkn_lst, t_param *param);
@@ -208,6 +205,11 @@ void				add_fileout(t_command *cmd, t_token *file, int operator);
 /* Executer */
 void				executer(char **env, t_token *tokens, t_command **cmd_lst);
 int					cmd_execute(t_list *cmd_list, t_param *param);
+void				execute_child(t_command *cmd, t_param *param, int cmd_num, int fds[2]);
+void				update_command_args(t_command *c, t_param *param);
+int					open_redirections(t_command *cmd, t_param *param, t_list *fileout_lst);
+void				check_heredoc_in_redir(t_param *param, t_command *cmd);
+int					check_ambiguous_redir(char *str);
 
 /* Built ins*/
 int					is_valid_identifier(char *arg, int allow_equalsign);
@@ -242,10 +244,11 @@ char				**make_envp(t_param *param);
 void				print_export(t_param *param);
 void				my_setenv(char *name, char *value, t_param *param);
 char				**make_envp(t_param *param);
+
 /* signals */
-// void				rl_replace_line(char *str, int num);
 void				reg_parent_signals(void);
 void				reg_child_signals(void);
+
 /* utils */
 int					ft_arr_len(char **arr);
 int					ft_strchr_i(const char *s, int c);
@@ -266,13 +269,6 @@ void				print_arr(char **arr);
 void				print_tkn(t_token *tkn);
 void				print_cmd(t_command *cmd);
 
-void				execute_child(t_command *cmd, t_param *param,
-						int cmd_num, int fds[2]);
-void				update_command_args(t_command *c, t_param *param);
-int					open_redirections(t_command *cmd, t_param *param,
-						t_list *fileout_lst);
-void				check_heredoc_in_redir(t_param *param, t_command *cmd);
-int					check_ambiguous_redir(char *str);
 
-int					rl_replace_line(char *, int);
+// int					rl_replace_line(char *, int);
 #endif
