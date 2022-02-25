@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 14:27:05 by pmontese          #+#    #+#             */
-/*   Updated: 2022/02/25 12:23:12 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 12:37:24 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	get_tkn_from_list(t_list *tokens, int pos, t_token **tkn, t_param *param)
 		if (tkn[0]->type == TT_OP && tkn[1]->type == TT_EOF)
 		{
 			pos = 0;
-			my_perror(SYNTAX_ERR, "|", 2);
+			my_perror(SYNTAX_ERR, tkn[0]->cnt, 2);
 			param->syntx_err = 1;
 			return (1);
 		}
