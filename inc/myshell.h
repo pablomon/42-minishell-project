@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmontese <pmontes@student.42madrid.com>    +#+  +:+       +#+        */
+/*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 18:01:48 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/25 11:45:54 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:45:04 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,16 +178,18 @@ void				cleanup(t_param *param);
 # define OT_HEREDOC 5
 # define OT_NEWLINE 6
 
-t_list		*get_tokens(char *input, t_param *param);
-void		init_tokenizer_struct(t_tokenizer *d, char *str);
-void		tokenize(t_tokenizer *d, t_token *token, t_param *param);
-int			delim_op_rules(t_tokenizer *data, t_token *token, char *str);
-int			quote_rules(t_tokenizer *data, t_token *token, char *str);
-int			mark_exp_rules(t_tokenizer *data, t_token *token, char *str);
-int			newop_rules(t_tokenizer *data, t_token *token, char *str);
-int			word_rules(t_tokenizer *data, t_token *token, char *str);
-int			delimit_tkn(t_tokenizer *data, t_token *tkn);
-int			is_op(char c);
+t_list				*get_tokens(char *input, t_param *param);
+void				init_tokenizer_struct(t_tokenizer *d, char *str);
+void				tokenize(t_tokenizer *d, t_token *token, t_param *param);
+int					delim_op_rules(t_tokenizer *data, t_token *token,
+						char *str);
+int					quote_rules(t_tokenizer *data, t_token *token, char *str);
+int					mark_exp_rules(t_tokenizer *data, t_token *token,
+						char *str);
+int					newop_rules(t_tokenizer *data, t_token *token, char *str);
+int					word_rules(t_tokenizer *data, t_token *token, char *str);
+int					delimit_tkn(t_tokenizer *data, t_token *tkn);
+int					is_op(char c);
 
 /* Expander */
 void				expand_tokens(t_list *tkn_lst, t_param *param);
@@ -203,11 +205,14 @@ void				argv_append(t_command *cmd, t_token *newargtkn);
 void				add_fileout(t_command *cmd, t_token *file, int operator);
 
 /* Executer */
-void				executer(char **env, t_token *tokens, t_command **cmd_lst);
+void				executer(char **env, t_token *tokens,
+						t_command **cmd_lst);
 int					cmd_execute(t_list *cmd_list, t_param *param);
-void				execute_child(t_command *cmd, t_param *param, int cmd_num, int fds[2]);
+void				execute_child(t_command *cmd, t_param *param, int cmd_num,
+						int fds[2]);
 void				update_command_args(t_command *c, t_param *param);
-int					open_redirections(t_command *cmd, t_param *param, t_list *fileout_lst);
+int					open_redirections(t_command *cmd, t_param *param,
+						t_list *fileout_lst);
 void				check_heredoc_in_redir(t_param *param, t_command *cmd);
 int					check_ambiguous_redir(char *str);
 
@@ -268,7 +273,5 @@ t_list				*ft_lstat(t_list *lst, int pos);
 void				print_arr(char **arr);
 void				print_tkn(t_token *tkn);
 void				print_cmd(t_command *cmd);
-
-
-// int					rl_replace_line(char *, int);
+int					rl_replace_line(char *str, int num);
 #endif

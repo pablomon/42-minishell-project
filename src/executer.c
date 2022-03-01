@@ -6,7 +6,7 @@
 /*   By: pmontese <pmontese@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 22:49:42 by lvintila          #+#    #+#             */
-/*   Updated: 2022/02/25 01:05:23 by pmontese         ###   ########.fr       */
+/*   Updated: 2022/02/25 17:23:10 by pmontese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	cmd_execute(t_list *cmd_list, t_param *param)
 				bi_exit_parent(cmd, param, i);
 		i++;
 		cmd_list = cmd_list->next;
-		system("leaks minishell");
 	}
 	close_fds(param);
 	return (g_status);
